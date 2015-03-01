@@ -102,6 +102,13 @@ SINGLE_COMMENT    ("//"[^\n]*)
 "ReadInteger"       { return T_ReadInteger; }
 "ReadLine"          { return T_ReadLine;    }
 
+":"                 { return ':';           }
+"++"                { return T_Increm;      }
+"--"                { return T_Decrem;      }
+"switch"            { return T_Switch;      }
+"case"              { return T_Case;        }
+"default"           { return T_Default;     }
+
 
 
  /* -------------------- Operators ----------------------------- */
