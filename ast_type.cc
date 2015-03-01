@@ -27,6 +27,11 @@ Type::Type(const char *n) {
     typeName = strdup(n);
 }
 
+void Type::Check()
+{
+    printf("Checking Type\n");
+}
+
 void Type::PrintChildren(int indentLevel) {
     printf("%s", typeName);
 }
@@ -36,6 +41,11 @@ NamedType::NamedType(Identifier *i) : Type(*i->GetLocation()) {
     Assert(i != NULL);
     (id=i)->SetParent(this);
 } 
+
+void NamedType::Check()
+{
+    printf("Checking Type\n");
+}
 
 void NamedType::PrintChildren(int indentLevel) {
     id->Print(indentLevel+1);
@@ -49,4 +59,7 @@ void ArrayType::PrintChildren(int indentLevel) {
     elemType->Print(indentLevel+1);
 }
 
-
+void ArrayType::Check()
+{
+    printf("Checking Type\n");
+}
