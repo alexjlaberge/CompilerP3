@@ -1,0 +1,6 @@
+*.o
+dcc
+*.swp
+lex.yy.c
+y.output
+y.tab.*
