@@ -222,3 +222,18 @@ void PostfixExpr::Check() {
         lvalue->Check();
         op->Check();
 }
+
+void NullConstant::Check() {
+}
+
+void This::Check() {
+}
+
+void ReadIntegerExpr::Check() {
+}
+
+void ReadLineExpr::Check() {
+}
+
+void EmptyExpr::Check() {
+}
