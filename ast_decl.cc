@@ -82,3 +82,45 @@ void FnDecl::Check() {
         body->Check();
         /* TODO returnType->Check() */
 }
+
+void InterfaceDecl::Check() {
+        Decl::Check();
+
+        int i = 0;
+
+        while (i < members->NumElements())
+        {
+                members->Nth(i)->Check();
+                i++;
+        }
+}
+
+void Decl::Check() {
+        /* TODO Put decl id in symbol table */
+        id->Check();
+}
+
+void VarDecl::Check() {
+        Decl::Check();
+        type->Check();
+}
+
+void ClassDecl::Check() {
+        Decl::Check();
+
+        int i = 0;
+
+        extends->Check();
+
+        while (i < members->NumElements())
+        {
+                members->Nth(i)->Check();
+                i++;
+        }
+
+        while (i < implements->NumElements())
+        {
+                implements->Nth(i)->Check();
+                i++;
+        }
+}

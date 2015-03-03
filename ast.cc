@@ -45,3 +45,7 @@ Identifier::Identifier(yyltype loc, const char *n) : Node(loc) {
 void Identifier::PrintChildren(int indentLevel) {
     printf("%s", name);
 }
+
+void Identifier::Check() {
+        /* TODO Check if symbol table contains this->name */
+}

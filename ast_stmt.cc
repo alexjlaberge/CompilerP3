@@ -153,4 +153,41 @@ void SwitchStmt::PrintChildren(int indentLevel) {
     cases->PrintAll(indentLevel+1);
 }
 
+void SwitchStmt::Check() {
+    int i = 0;
 
+    expr->Check();
+
+    while (i < cases->NumElements())
+    {
+            cases->Nth(i)->Check();
+            i++;
+    }
+}
+
+void ConditionalStmt::Check() {
+        test->Check();
+        body->Check();
+}
+
+void ForStmt::Check() {
+        init->Check();
+        step->Check();
+}
+
+void IfStmt::Check() {
+        elseBody->Check();
+}
+
+void ReturnStmt::Check() {
+        expr->Check();
+}
+
+void Case::Check() {
+        int i = 0;
+
+        while (i < stmts->NumElements())
+        {
+                stmts->Nth(i)->Check();
+        }
+}

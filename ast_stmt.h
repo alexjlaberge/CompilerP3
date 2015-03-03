@@ -46,7 +46,7 @@ class StmtBlock : public Stmt
     StmtBlock(List<VarDecl*> *variableDeclarations, List<Stmt*> *statements);
     const char *GetPrintNameForNode() { return "StmtBlock"; }
     void PrintChildren(int indentLevel);
-    void Check();
+    virtual void Check();
 };
 
   
@@ -58,6 +58,7 @@ class ConditionalStmt : public Stmt
   
   public:
     ConditionalStmt(Expr *testExpr, Stmt *body);
+    void Check();
 };
 
 class LoopStmt : public ConditionalStmt 
@@ -76,6 +77,7 @@ class ForStmt : public LoopStmt
     ForStmt(Expr *init, Expr *test, Expr *step, Stmt *body);
     const char *GetPrintNameForNode() { return "ForStmt"; }
     void PrintChildren(int indentLevel);
+    virtual void Check();
 };
 
 class WhileStmt : public LoopStmt 
@@ -95,6 +97,7 @@ class IfStmt : public ConditionalStmt
     IfStmt(Expr *test, Stmt *thenBody, Stmt *elseBody);
     const char *GetPrintNameForNode() { return "IfStmt"; }
     void PrintChildren(int indentLevel);
+    virtual void Check();
 };
 
 class BreakStmt : public Stmt 
@@ -102,6 +105,7 @@ class BreakStmt : public Stmt
   public:
     BreakStmt(yyltype loc) : Stmt(loc) {}
     const char *GetPrintNameForNode() { return "BreakStmt"; }
+    void Check();
 };
 
 class ReturnStmt : public Stmt  
@@ -113,6 +117,7 @@ class ReturnStmt : public Stmt
     ReturnStmt(yyltype loc, Expr *expr);
     const char *GetPrintNameForNode() { return "ReturnStmt"; }
     void PrintChildren(int indentLevel);
+    virtual void Check();
 };
 
 class PrintStmt : public Stmt
@@ -124,7 +129,7 @@ class PrintStmt : public Stmt
     PrintStmt(List<Expr*> *arguments);
     const char *GetPrintNameForNode() { return "PrintStmt"; }
     void PrintChildren(int indentLevel);
-    void Check();
+    virtual void Check();
 };
 
 
@@ -140,6 +145,7 @@ class Case : public Node
     Case(IntConstant *v, List<Stmt*> *stmts);
     const char *GetPrintNameForNode() { return value ? "Case" :"Default"; }
     void PrintChildren(int indentLevel);
+    virtual void Check();
 };
 
 class SwitchStmt : public Stmt
@@ -152,6 +158,7 @@ class SwitchStmt : public Stmt
     SwitchStmt(Expr *e, List<Case*> *cases);
     const char *GetPrintNameForNode() { return "SwitchStmt"; }
     void PrintChildren(int indentLevel);
+    virtual void Check();
 };
 
 #endif

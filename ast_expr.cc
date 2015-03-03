@@ -138,4 +138,87 @@ void PostfixExpr::PrintChildren(int indentLevel) {
     lvalue->Print(indentLevel+1);
     op->Print(indentLevel+1);
 }
-       
+
+void BreakStmt::Check() {
+
+}
+
+void DoubleConstant::Check() {
+
+}
+
+void IntConstant::Check() {
+
+}
+
+void BoolConstant::Check() {
+
+}
+
+void StringConstant::Check() {
+
+}
+
+void CompoundExpr::Check() {
+        /* TODO Check that both operands and operator are compatible */
+        if (left != nullptr)
+        {
+                left->Check();
+        }
+        op->Check();
+        right->Check();
+}
+
+void FieldAccess::Check() {
+        base->Check();
+        field->Check();
+}
+
+void ArrayAccess::Check() {
+        base->Check();
+        subscript->Check();
+        if (typeid(*subscript).hash_code() != typeid(IntConstant).hash_code())
+        {
+                /* TODO ERROR */
+        }
+}
+
+void Operator::Check() {
+        /* char tokenString[4] */
+        /* TODO Check tokenString is actually an operator ? */
+}
+
+void Call::Check() {
+        int i = 0;
+
+        if (base != nullptr)
+        {
+                base->Check();
+        }
+
+        field->Check();
+
+        while (i < actuals->NumElements())
+        {
+                actuals->Nth(i)->Check();
+        }
+}
+
+void NewArrayExpr::Check() {
+        if (typeid(*size).hash_code() != typeid(IntConstant).hash_code())
+        {
+                /* TODO ERROR */
+        }
+
+        elemType->Check();
+}
+
+void NewExpr::Check() {
+        cType->Check();
+}
+
+void PostfixExpr::Check() {
+        /* TODO Ensure that the op can be applied to the lvalue */
+        lvalue->Check();
+        op->Check();
+}
