@@ -2,11 +2,14 @@
  * -----------------
  * Implementation of statement node classes.
  */
-#include "ast_stmt.h"
-#include "ast_type.h"
 #include "ast_decl.h"
 #include "ast_expr.h"
+#include "ast_stmt.h"
+#include "ast_type.h"
+#include <iostream>
 
+using std::cout;
+using std::endl;
 
 Program::Program(List<Decl*> *d) {
     Assert(d != NULL);
@@ -18,6 +21,15 @@ void Program::PrintChildren(int indentLevel) {
     printf("\n");
 }
 
+void Program::Check() {
+        int i = 0;
+        while (i < decls->NumElements())
+        {
+                decls->Nth(i)->Check();
+                i++;
+        }
+}
+
 StmtBlock::StmtBlock(List<VarDecl*> *d, List<Stmt*> *s) {
     Assert(d != NULL && s != NULL);
     (decls=d)->SetParentAll(this);
@@ -27,6 +39,23 @@ StmtBlock::StmtBlock(List<VarDecl*> *d, List<Stmt*> *s) {
 void StmtBlock::PrintChildren(int indentLevel) {
     decls->PrintAll(indentLevel+1);
     stmts->PrintAll(indentLevel+1);
+}
+
+void StmtBlock::Check()
+{
+        int i = 0;
+
+        while (i < decls->NumElements())
+        {
+                decls->Nth(i)->Check();
+                i++;
+        }
+        i = 0;
+        while (i < stmts->NumElements())
+        {
+                stmts->Nth(i)->Check();
+                i++;
+        }
 }
 
 ConditionalStmt::ConditionalStmt(Expr *t, Stmt *b) { 
@@ -82,6 +111,23 @@ PrintStmt::PrintStmt(List<Expr*> *a) {
 
 void PrintStmt::PrintChildren(int indentLevel) {
     args->PrintAll(indentLevel+1, "(args) ");
+}
+
+void PrintStmt::Check() {
+        int i = 0;
+
+        while (i < args->NumElements())
+        {
+                size_t hash = typeid(*(args->Nth(i))).hash_code();
+                if (hash != typeid(IntConstant).hash_code() &&
+                                hash != typeid(StringConstant).hash_code() &&
+                                hash != typeid(BoolConstant).hash_code())
+                {
+                        cout << "AAHHHH error" << endl;
+                        /* TODO ERROR */
+                }
+                i++;
+        }
 }
 
 Case::Case(IntConstant *v, List<Stmt*> *s) {

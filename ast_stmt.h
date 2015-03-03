@@ -26,6 +26,7 @@ class Program : public Node
      Program(List<Decl*> *declList);
      const char *GetPrintNameForNode() { return "Program"; }
      void PrintChildren(int indentLevel);
+     virtual void Check();
 };
 
 class Stmt : public Node
@@ -45,6 +46,7 @@ class StmtBlock : public Stmt
     StmtBlock(List<VarDecl*> *variableDeclarations, List<Stmt*> *statements);
     const char *GetPrintNameForNode() { return "StmtBlock"; }
     void PrintChildren(int indentLevel);
+    void Check();
 };
 
   
@@ -122,6 +124,7 @@ class PrintStmt : public Stmt
     PrintStmt(List<Expr*> *arguments);
     const char *GetPrintNameForNode() { return "PrintStmt"; }
     void PrintChildren(int indentLevel);
+    void Check();
 };
 
 

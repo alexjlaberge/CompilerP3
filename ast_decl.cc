@@ -5,7 +5,10 @@
 #include "ast_decl.h"
 #include "ast_type.h"
 #include "ast_stmt.h"
-        
+#include <iostream>
+
+using std::cout;
+using std::endl;
          
 Decl::Decl(Identifier *n) : Node(*n->GetLocation()) {
     Assert(n != NULL);
@@ -68,4 +71,14 @@ void FnDecl::PrintChildren(int indentLevel) {
     if (body) body->Print(indentLevel+1, "(body) ");
 }
 
+void FnDecl::Check() {
+        int i = 0;
 
+        while (i < formals->NumElements())
+        {
+                formals->Nth(i)->Check();
+                i++;
+        }
+        body->Check();
+        /* TODO returnType->Check() */
+}

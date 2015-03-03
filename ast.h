@@ -26,6 +26,8 @@
 
 #include <stdlib.h>   // for NULL
 #include "location.h"
+#include <iostream>
+#include <typeinfo>
 
 class Node 
 {
@@ -47,9 +49,9 @@ class Node
     // subclasses should override PrintChildren() instead
     void Print(int indentLevel, const char *label = NULL); 
     virtual void PrintChildren(int indentLevel)  {}
-    virtual void Check() {}
+    virtual void Check() = 0;
 };
-   
+
 
 class Identifier : public Node 
 {
