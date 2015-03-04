@@ -61,6 +61,7 @@ class Identifier : public Node
   public:
     Identifier(yyltype loc, const char *name);
     const char *GetPrintNameForNode()   { return "Identifier"; }
+    const char *GetName() { return name; }
     void PrintChildren(int indentLevel);
     virtual void Check();
 };

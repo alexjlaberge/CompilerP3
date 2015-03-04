@@ -5,6 +5,7 @@
 #include "ast_decl.h"
 #include "ast_type.h"
 #include "ast_stmt.h"
+#include "symbols.h"
 
 Decl::Decl(Identifier *n) : Node(*n->GetLocation()) {
     Assert(n != NULL);
@@ -29,6 +30,8 @@ ClassDecl::ClassDecl(Identifier *n, NamedType *ex, List<NamedType*> *imp, List<D
     if (extends) extends->SetParent(this);
     (implements=imp)->SetParentAll(this);
     (members=m)->SetParentAll(this);
+
+    declared_types.Enter(n->GetName(), this);
 }
 
 void ClassDecl::PrintChildren(int indentLevel) {

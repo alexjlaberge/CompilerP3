@@ -5,6 +5,9 @@
 #include "ast_type.h"
 #include "ast_decl.h"
 #include <string.h>
+#include "hashtable.h"
+#include "errors.h"
+#include "symbols.h"
  
 /* Class constants
  * ---------------
@@ -29,14 +32,23 @@ Type::Type(const char *n) {
 
 void Type::Check()
 {
+        if (typeName == nullptr)
+        {
+                return;
+        }
 
+        if (declared_types.Lookup(typeName) == nullptr)
+        {
+                ReportError::Formatted(location,
+                                "No declaration found for type '%s'",
+                                typeName);
+        }
 }
 
 void Type::PrintChildren(int indentLevel) {
     printf("%s", typeName);
 }
 
-	
 NamedType::NamedType(Identifier *i) : Type(*i->GetLocation()) {
     Assert(i != NULL);
     (id=i)->SetParent(this);
@@ -44,6 +56,14 @@ NamedType::NamedType(Identifier *i) : Type(*i->GetLocation()) {
 
 void NamedType::Check()
 {
+        Type::Check();
+
+        if (declared_types.Lookup(id->GetName()) == nullptr)
+        {
+                ReportError::Formatted(location,
+                                "No declaration found for type '%s'",
+                                id->GetName());
+        }
 }
 
 void NamedType::PrintChildren(int indentLevel) {
@@ -54,6 +74,7 @@ ArrayType::ArrayType(yyltype loc, Type *et) : Type(loc) {
     Assert(et != NULL);
     (elemType=et)->SetParent(this);
 }
+
 void ArrayType::PrintChildren(int indentLevel) {
     elemType->Print(indentLevel+1);
 }
