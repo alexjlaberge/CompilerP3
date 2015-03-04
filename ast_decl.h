@@ -23,7 +23,7 @@ class Decl : public Node
   
   public:
     Decl(Identifier *name);
-    void Check();
+    virtual void Check();
 };
 
 class VarDecl : public Decl 

@@ -58,7 +58,7 @@ class ConditionalStmt : public Stmt
   
   public:
     ConditionalStmt(Expr *testExpr, Stmt *body);
-    void Check();
+    virtual void Check();
 };
 
 class LoopStmt : public ConditionalStmt 
@@ -105,7 +105,7 @@ class BreakStmt : public Stmt
   public:
     BreakStmt(yyltype loc) : Stmt(loc) {}
     const char *GetPrintNameForNode() { return "BreakStmt"; }
-    void Check();
+    virtual void Check();
 };
 
 class ReturnStmt : public Stmt  
