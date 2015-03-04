@@ -29,7 +29,7 @@ Type::Type(const char *n) {
 
 void Type::Check()
 {
-    printf("Checking Type\n");
+
 }
 
 void Type::PrintChildren(int indentLevel) {
@@ -44,7 +44,6 @@ NamedType::NamedType(Identifier *i) : Type(*i->GetLocation()) {
 
 void NamedType::Check()
 {
-    printf("Checking Type\n");
 }
 
 void NamedType::PrintChildren(int indentLevel) {
@@ -61,5 +60,4 @@ void ArrayType::PrintChildren(int indentLevel) {
 
 void ArrayType::Check()
 {
-    printf("Checking Type\n");
 }

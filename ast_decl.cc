@@ -5,11 +5,7 @@
 #include "ast_decl.h"
 #include "ast_type.h"
 #include "ast_stmt.h"
-#include <iostream>
 
-using std::cout;
-using std::endl;
-         
 Decl::Decl(Identifier *n) : Node(*n->GetLocation()) {
     Assert(n != NULL);
     (id=n)->SetParent(this); 
@@ -110,7 +106,10 @@ void ClassDecl::Check() {
 
         int i = 0;
 
-        extends->Check();
+        if (extends != nullptr)
+        {
+                extends->Check();
+        }
 
         while (i < members->NumElements())
         {
@@ -118,6 +117,7 @@ void ClassDecl::Check() {
                 i++;
         }
 
+        i = 0;
         while (i < implements->NumElements())
         {
                 implements->Nth(i)->Check();

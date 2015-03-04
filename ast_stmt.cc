@@ -119,9 +119,7 @@ void PrintStmt::Check() {
         while (i < args->NumElements())
         {
                 size_t hash = typeid(*(args->Nth(i))).hash_code();
-                if (hash != typeid(IntConstant).hash_code() &&
-                                hash != typeid(StringConstant).hash_code() &&
-                                hash != typeid(BoolConstant).hash_code())
+                if (hash == typeid(DoubleConstant).hash_code())
                 {
                         cout << "AAHHHH error" << endl;
                         /* TODO ERROR */
@@ -176,7 +174,10 @@ void ForStmt::Check() {
 }
 
 void IfStmt::Check() {
-        elseBody->Check();
+        if (elseBody != nullptr)
+        {
+                elseBody->Check();
+        }
 }
 
 void ReturnStmt::Check() {
@@ -189,5 +190,6 @@ void Case::Check() {
         while (i < stmts->NumElements())
         {
                 stmts->Nth(i)->Check();
+                i++;
         }
 }

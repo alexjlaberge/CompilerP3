@@ -170,8 +170,14 @@ void CompoundExpr::Check() {
 }
 
 void FieldAccess::Check() {
-        base->Check();
-        field->Check();
+        if (base != nullptr)
+        {
+                base->Check();
+        }
+        if (field != nullptr)
+        {
+                field->Check();
+        }
 }
 
 void ArrayAccess::Check() {
@@ -201,6 +207,7 @@ void Call::Check() {
         while (i < actuals->NumElements())
         {
                 actuals->Nth(i)->Check();
+                i++;
         }
 }
 
