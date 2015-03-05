@@ -154,7 +154,7 @@ void SwitchStmt::PrintChildren(int indentLevel) {
 void SwitchStmt::Check() {
     int i = 0;
 
-    expr->Check();
+    expr->Check(); //Evaluate to int
 
     while (i < cases->NumElements())
     {
@@ -169,7 +169,7 @@ void ConditionalStmt::Check() {
 }
 
 void ForStmt::Check() {
-        init->Check();
+        init->Check(); 
         step->Check();
 }
 
@@ -181,7 +181,7 @@ void IfStmt::Check() {
 }
 
 void ReturnStmt::Check() {
-        expr->Check();
+        expr->Check(); //Evaluate to same type as Fn
 }
 
 void Case::Check() {

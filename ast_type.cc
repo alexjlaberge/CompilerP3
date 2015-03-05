@@ -36,7 +36,7 @@ void Type::Check()
         {
                 return;
         }
-
+        if(strcmp(typeName, "int") && strcmp(typeName, "double") && strcmp(typeName, "void") && strcmp(typeName, "bool") && strcmp(typeName, "null") && strcmp(typeName, "string") && strcmp(typeName, "error"))
         if (declared_types.Lookup(typeName) == nullptr)
         {
                 ReportError::Formatted(location,
