@@ -9,7 +9,7 @@
 #include "utility.h"
 #include "errors.h"
 #include "parser.h"
-
+#include "symbols.h"
 
 
 /* Function: main()
@@ -22,11 +22,19 @@
  */
 int main(int argc, char *argv[])
 {
-    ParseCommandLine(argc, argv);
-  
-    InitScanner();
-    InitParser();
-    yyparse();
-    return (ReportError::NumErrors() == 0? 0 : -1);
+        declared_types.Enter("int", (Decl *) Type::intType);
+        declared_types.Enter("double", (Decl *) Type::doubleType);
+        declared_types.Enter("void", (Decl *) Type::voidType);
+        declared_types.Enter("bool", (Decl *) Type::boolType);
+        declared_types.Enter("null", (Decl *) Type::nullType);
+        declared_types.Enter("string", (Decl *) Type::stringType);
+        declared_types.Enter("error", (Decl *) Type::errorType);
+
+        ParseCommandLine(argc, argv);
+
+        InitScanner();
+        InitParser();
+        yyparse();
+        return (ReportError::NumErrors() == 0? 0 : -1);
 }
 

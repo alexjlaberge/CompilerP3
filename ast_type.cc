@@ -8,6 +8,7 @@
 #include "hashtable.h"
 #include "errors.h"
 #include "symbols.h"
+#include <cassert>
  
 /* Class constants
  * ---------------
