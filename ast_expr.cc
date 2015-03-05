@@ -6,7 +6,8 @@
 #include "ast_type.h"
 #include "ast_decl.h"
 #include <string.h>
-
+#include "errors.h"
+#include "symbols.h"
 
 IntConstant::IntConstant(yyltype loc, int val) : Expr(loc) {
     value = val;
@@ -172,11 +173,18 @@ void CompoundExpr::Check() {
 void FieldAccess::Check() {
         if (base != nullptr)
         {
+                /* This is the case where it's classname.methodname */
                 base->Check();
         }
-        if (field != nullptr)
+        else
         {
-                field->Check();
+                /* this is the case where it's varname op */
+                if (declared_variables.Lookup(field->GetName()) == nullptr)
+                {
+                        ReportError::Formatted(location,
+                                        "No declaration found for variable '%s'",
+                                        field->GetName());
+                }
         }
 }
 
@@ -243,4 +251,13 @@ void ReadLineExpr::Check() {
 }
 
 void EmptyExpr::Check() {
+}
+
+void LValue::Check() {
+}
+
+void AssignExpr::Check() {
+        left->Check();
+        op->Check();
+        right->Check();
 }
