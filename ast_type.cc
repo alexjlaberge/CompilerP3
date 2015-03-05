@@ -59,7 +59,7 @@ void NamedType::Check()
 {
         Type::Check();
 
-        if (declared_types.Lookup(id->GetName()) == nullptr)
+        if (!IsDeclared())
         {
                 ReportError::Formatted(location,
                                 "No declaration found for type '%s'",
@@ -80,6 +80,9 @@ void ArrayType::PrintChildren(int indentLevel) {
     elemType->Print(indentLevel+1);
 }
 
-void ArrayType::Check()
-{
+void ArrayType::Check() {
+}
+
+bool NamedType::IsDeclared() {
+        return (declared_types.Lookup(id->GetName()) != nullptr);
 }

@@ -229,7 +229,12 @@ void NewArrayExpr::Check() {
 }
 
 void NewExpr::Check() {
-        cType->Check();
+        if (!cType->IsDeclared())
+        {
+                ReportError::Formatted(cType->GetLocation(),
+                                "No declaration found for class '%s'",
+                                cType->GetId()->GetName());
+        }
 }
 
 void PostfixExpr::Check() {

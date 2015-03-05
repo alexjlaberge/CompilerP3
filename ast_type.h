@@ -40,6 +40,8 @@ class NamedType : public Type
     
     const char *GetPrintNameForNode() { return "NamedType"; }
     void PrintChildren(int indentLevel);
+    bool IsDeclared();
+    const Identifier * GetId() { return id; }
     virtual void Check();
 };
 
