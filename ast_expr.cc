@@ -166,6 +166,7 @@ void StringConstant::Check() {
 
 void CompoundExpr::Check() {
         /* TODO Check that both operands and operator are compatible */
+        printf("COMP");
 		string leftType;
 		string rightType;
 		string opType;
@@ -180,6 +181,17 @@ void CompoundExpr::Check() {
 }
 
 void ArithmeticExpr::Check() {
+    left->Check();
+    right->Check();
+    if(left->getType() != right->getType())
+    {
+        ReportError::Formatted(op->GetLocation(), "Incompatible operands: %s %s %s", left->getType()->getTypeName(), op->getOp(), right->getType()->getTypeName());
+        type = Type::errorType;
+    }
+    else
+    {
+        type = left->getType();
+    }
 
 }
 
@@ -217,9 +229,11 @@ Type* AssignExpr::getType() {
 
 
 void FieldAccess::Check() {
+        //printf("FIELD");
+        field->Check();
         VarDecl* d = declared_variables.Lookup(field->GetName());
-        //printf("a");
         type = d->getType();
+        //printf("%s \n", field->GetName());
         //printf("%s", type->getTypeName());
 
         if(d == nullptr)
@@ -330,10 +344,11 @@ void AssignExpr::Check() {
         left->Check();
         op->Check();
         right->Check();
-        //printf("%s", left->getType()->getTypeName());
-        //printf("%s", right->getType()->getTypeName());
-        if(left->getType() != right->getType())
+        //printf("%s",left->getType()->getTypeName());
+        if(left->getType() != right->getType() && left->getType() != Type::errorType && right->getType() != Type::errorType)
         {
-            ReportError::Formatted(op->GetLocation(), "Incompatible operands: %s = %s", left->getType()->getTypeName(), right->getType()->getTypeName());
+            ReportError::Formatted(op->GetLocation(), "Incompatible operands: %s = %s", 
+                left->getType()->getTypeName(), 
+                    right->getType()->getTypeName());
         }
 }

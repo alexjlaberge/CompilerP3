@@ -108,6 +108,7 @@ class Operator : public Node
     const char *GetPrintNameForNode() { return "Operator"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+    char* getOp() {return tokenString;}
  };
  
 class CompoundExpr : public Expr
