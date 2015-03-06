@@ -11,6 +11,7 @@
 
 IntConstant::IntConstant(yyltype loc, int val) : Expr(loc) {
     value = val;
+    type = new Type("int");
 }
 void IntConstant::PrintChildren(int indentLevel) { 
     printf("%d", value);
@@ -18,6 +19,7 @@ void IntConstant::PrintChildren(int indentLevel) {
 
 DoubleConstant::DoubleConstant(yyltype loc, double val) : Expr(loc) {
     value = val;
+    type = new Type("double");
 }
 void DoubleConstant::PrintChildren(int indentLevel) { 
     printf("%g", value);
@@ -25,6 +27,7 @@ void DoubleConstant::PrintChildren(int indentLevel) {
 
 BoolConstant::BoolConstant(yyltype loc, bool val) : Expr(loc) {
     value = val;
+    type = new Type("bool");
 }
 void BoolConstant::PrintChildren(int indentLevel) { 
     printf("%s", value ? "true" : "false");
@@ -33,6 +36,7 @@ void BoolConstant::PrintChildren(int indentLevel) {
 StringConstant::StringConstant(yyltype loc, const char *val) : Expr(loc) {
     Assert(val != NULL);
     value = strdup(val);
+    type = new Type("string");
 }
 void StringConstant::PrintChildren(int indentLevel) { 
     printf("%s",value);
@@ -162,13 +166,54 @@ void StringConstant::Check() {
 
 void CompoundExpr::Check() {
         /* TODO Check that both operands and operator are compatible */
+		string leftType;
+		string rightType;
+		string opType;
         if (left != nullptr)
         {
                 left->Check();
         }
         op->Check();
         right->Check();
+        printf("%s, %s\n", left->getType()->getTypeName(), right->getType()->getTypeName());
 }
+
+void ArithmeticExpr::Check() {
+
+}
+
+Type* ArithmeticExpr::getType() {
+	return type;
+}
+
+void RelationalExpr::Check() {
+	
+}
+
+Type* RelationalExpr::getType() {
+	return type;
+}
+
+void LogicalExpr::Check() {
+	
+}
+
+Type* LogicalExpr::getType() {
+	return type;
+}
+
+void EqualityExpr::Check() {
+	
+}
+
+Type* EqualityExpr::getType() {
+	return type;
+}
+
+Type* AssignExpr::getType() {
+	return type;
+}
+
 
 void FieldAccess::Check() {
         if (base != nullptr)

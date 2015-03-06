@@ -23,6 +23,8 @@ class Expr : public Stmt
   public:
     Expr(yyltype loc) : Stmt(loc) {}
     Expr() : Stmt() {}
+    Type *type;
+    virtual Type* getType() {return type;}
 };
 
 /* This node type is used for those places where an expression is optional.
@@ -45,6 +47,7 @@ class IntConstant : public Expr
     const char *GetPrintNameForNode() { return "IntConstant"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+    Type* getType() {return type;}
 };
 
 class DoubleConstant : public Expr 
@@ -57,6 +60,7 @@ class DoubleConstant : public Expr
     const char *GetPrintNameForNode() { return "DoubleConstant"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+    Type* getType() {return type;}
 };
 
 class BoolConstant : public Expr 
@@ -69,6 +73,7 @@ class BoolConstant : public Expr
     const char *GetPrintNameForNode() { return "BoolConstant"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+    Type* getType() {return type;}
 };
 
 class StringConstant : public Expr 
@@ -81,6 +86,7 @@ class StringConstant : public Expr
     const char *GetPrintNameForNode() { return "StringConstant"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+    Type* getType() {return type;}
 };
 
 class NullConstant: public Expr 
@@ -89,6 +95,7 @@ class NullConstant: public Expr
     NullConstant(yyltype loc) : Expr(loc) {}
     const char *GetPrintNameForNode() { return "NullConstant"; }
     virtual void Check();
+    Type* getType() {return type;}
 };
 
 class Operator : public Node 
@@ -114,6 +121,7 @@ class CompoundExpr : public Expr
     CompoundExpr(Operator *op, Expr *rhs);             // for unary
     void PrintChildren(int indentLevel);
     virtual void Check();
+    virtual Type* getType() {return type;}
 };
 
 class ArithmeticExpr : public CompoundExpr 
@@ -122,6 +130,8 @@ class ArithmeticExpr : public CompoundExpr
     ArithmeticExpr(Expr *lhs, Operator *op, Expr *rhs) : CompoundExpr(lhs,op,rhs) {}
     ArithmeticExpr(Operator *op, Expr *rhs) : CompoundExpr(op,rhs) {}
     const char *GetPrintNameForNode() { return "ArithmeticExpr"; }
+    virtual void Check();
+    Type* getType();
 };
 
 class RelationalExpr : public CompoundExpr 
@@ -129,6 +139,8 @@ class RelationalExpr : public CompoundExpr
   public:
     RelationalExpr(Expr *lhs, Operator *op, Expr *rhs) : CompoundExpr(lhs,op,rhs) {}
     const char *GetPrintNameForNode() { return "RelationalExpr"; }
+    virtual void Check();
+    Type* getType();
 };
 
 class EqualityExpr : public CompoundExpr 
@@ -136,6 +148,8 @@ class EqualityExpr : public CompoundExpr
   public:
     EqualityExpr(Expr *lhs, Operator *op, Expr *rhs) : CompoundExpr(lhs,op,rhs) {}
     const char *GetPrintNameForNode() { return "EqualityExpr"; }
+    virtual void Check();
+    Type* getType();
 };
 
 class LogicalExpr : public CompoundExpr 
@@ -144,6 +158,8 @@ class LogicalExpr : public CompoundExpr
     LogicalExpr(Expr *lhs, Operator *op, Expr *rhs) : CompoundExpr(lhs,op,rhs) {}
     LogicalExpr(Operator *op, Expr *rhs) : CompoundExpr(op,rhs) {}
     const char *GetPrintNameForNode() { return "LogicalExpr"; }
+    virtual void Check();
+    Type* getType();
 };
 
 class AssignExpr : public CompoundExpr 
@@ -152,6 +168,7 @@ class AssignExpr : public CompoundExpr
     AssignExpr(Expr *lhs, Operator *op, Expr *rhs) : CompoundExpr(lhs,op,rhs) {}
     const char *GetPrintNameForNode() { return "AssignExpr"; }
     virtual void Check();
+    Type* getType();
 };
 
 class LValue : public Expr 
