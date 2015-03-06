@@ -6,7 +6,9 @@
 #include "ast_expr.h"
 #include "ast_stmt.h"
 #include "ast_type.h"
+#include "errors.h"
 #include <iostream>
+#include <string.h>
 
 using std::cout;
 using std::endl;
@@ -165,6 +167,11 @@ void SwitchStmt::Check() {
 
 void ConditionalStmt::Check() {
         test->Check();
+        printf("checking");
+        if(strcmp(test->getType()->getTypeName(), "bool"))
+        {
+            ReportError::Formatted(location, "Test expression must have boolean type");//Error
+        }
         body->Check();
 }
 
@@ -174,6 +181,12 @@ void ForStmt::Check() {
 }
 
 void IfStmt::Check() {
+        //printf("eb");
+        test->Check();
+        if(strcmp(test->getType()->getTypeName(), "bool"))
+        {
+            ReportError::Formatted(location, "Test expression must have boolean type");//Error
+        }
         if (elseBody != nullptr)
         {
                 elseBody->Check();

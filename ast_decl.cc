@@ -16,7 +16,6 @@ Decl::Decl(Identifier *n) : Node(*n->GetLocation()) {
 VarDecl::VarDecl(Identifier *n, Type *t) : Decl(n) {
     Assert(n != NULL && t != NULL);
     (type=t)->SetParent(this);
-
     declared_variables.Enter(n->GetName(), this);
 }
   

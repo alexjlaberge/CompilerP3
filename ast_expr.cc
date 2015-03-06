@@ -175,7 +175,8 @@ void CompoundExpr::Check() {
         }
         op->Check();
         right->Check();
-        printf("%s, %s\n", left->getType()->getTypeName(), right->getType()->getTypeName());
+        //if(left->getType() != nullptr && right->getType() != nullptr)
+        //printf("%s, %s\n", left->getType()->getTypeName(), right->getType()->getTypeName());
 }
 
 void ArithmeticExpr::Check() {
@@ -216,6 +217,16 @@ Type* AssignExpr::getType() {
 
 
 void FieldAccess::Check() {
+        VarDecl* d = declared_variables.Lookup(field->GetName());
+        //printf("a");
+        type = d->getType();
+        //printf("%s", type->getTypeName());
+
+        if(d == nullptr)
+        {
+            //ReportError
+        }
+
         if (base != nullptr)
         {
                 /* This is the case where it's classname.methodname */
@@ -231,6 +242,7 @@ void FieldAccess::Check() {
                                         field->GetName());
                 }
         }
+
 }
 
 void ArrayAccess::Check() {
@@ -239,6 +251,10 @@ void ArrayAccess::Check() {
         if (typeid(*subscript).hash_code() != typeid(IntConstant).hash_code())
         {
                 /* TODO ERROR */
+        }
+        if(strcmp(subscript->getType()->getTypeName(), "int"))
+        {
+            //Report Error
         }
 }
 
@@ -269,7 +285,11 @@ void NewArrayExpr::Check() {
         {
                 /* TODO ERROR */
         }
-
+        if(strcmp(size->getType()->getTypeName(), "int"))
+        {
+            ReportError::Formatted(location,
+                                        "Size for NewArray must be an integer");
+        }
         elemType->Check();
 }
 
@@ -310,4 +330,10 @@ void AssignExpr::Check() {
         left->Check();
         op->Check();
         right->Check();
+        //printf("%s", left->getType()->getTypeName());
+        //printf("%s", right->getType()->getTypeName());
+        if(left->getType() != right->getType())
+        {
+            ReportError::Formatted(op->GetLocation(), "Incompatible operands: %s = %s", left->getType()->getTypeName(), right->getType()->getTypeName());
+        }
 }

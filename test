@@ -3,6 +3,6 @@ int main()
 	int a;
 	int b;
 	double c;
-	a = 2 + 2;
+	a = 2.5;
 	return a;
 }
