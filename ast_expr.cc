@@ -183,8 +183,20 @@ void CompoundExpr::Check() {
 
 void ArithmeticExpr::Check() {
     left->Check();
+    op->Check();
     right->Check();
-    if(left->getType()->operator!=(right->getType()))
+
+    assert(left->getType());
+    assert(right->getType());
+
+    if (left->getType() == Type::errorType ||
+                    right->getType() == Type::errorType)
+    {
+            type = Type::errorType;
+            return;
+    }
+
+    if (left->getType()->operator!=(right->getType()))
     {
         ReportError::Formatted(op->GetLocation(), "Incompatible operands: %s %s %s", left->getType()->getTypeName(), op->getOp(), right->getType()->getTypeName());
         type = Type::errorType;
