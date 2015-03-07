@@ -10,6 +10,14 @@
 #include "symbols.h"
 #include <cassert>
 
+#define compound_expr_return_if_errors() \
+    if (left->getType() == Type::errorType || \
+                    right->getType() == Type::errorType) \
+    { \
+            type = Type::errorType; \
+            return; \
+    }
+
 IntConstant::IntConstant(yyltype loc, int val) : Expr(loc) {
     value = val;
     type = new Type("int");
@@ -166,35 +174,22 @@ void StringConstant::Check() {
 }
 
 void CompoundExpr::Check() {
-        /* TODO Check that both operands and operator are compatible */
-        printf("COMP");
-		string leftType;
-		string rightType;
-		string opType;
         if (left != nullptr)
         {
                 left->Check();
+                assert(left->getType());
         }
+
         op->Check();
+
         right->Check();
-        //if(left->getType() != nullptr && right->getType() != nullptr)
-        //printf("%s, %s\n", left->getType()->getTypeName(), right->getType()->getTypeName());
+        assert(right->getType());
 }
 
 void ArithmeticExpr::Check() {
-    left->Check();
-    op->Check();
-    right->Check();
+        CompoundExpr::Check();
 
-    assert(left->getType());
-    assert(right->getType());
-
-    if (left->getType() == Type::errorType ||
-                    right->getType() == Type::errorType)
-    {
-            type = Type::errorType;
-            return;
-    }
+        compound_expr_return_if_errors();
 
     if (left->getType()->operator!=(right->getType()))
     {
@@ -387,18 +382,9 @@ void LValue::Check() {
 }
 
 void AssignExpr::Check() {
-        left->Check();
-        op->Check();
-        right->Check();
+        CompoundExpr::Check();
 
-        if (left->getType() == Type::errorType ||
-                        right->getType() == Type::errorType)
-        {
-                return;
-        }
-
-        assert(left->getType());
-        assert(right->getType());
+        compound_expr_return_if_errors();
 
         if(right->getType()->operator!=(left->getType()))
         {
