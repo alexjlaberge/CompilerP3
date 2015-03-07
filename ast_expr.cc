@@ -203,10 +203,6 @@ void ArithmeticExpr::Check() {
 
 }
 
-Type* ArithmeticExpr::getType() {
-	return type;
-}
-
 void RelationalExpr::Check() {
         left->Check();
         op->Check();
@@ -236,10 +232,6 @@ void RelationalExpr::Check() {
         }
 }
 
-Type* RelationalExpr::getType() {
-	return type;
-}
-
 void LogicalExpr::Check() {
         left->Check();
         op->Check();
@@ -261,20 +253,8 @@ void LogicalExpr::Check() {
         }
 }
 
-Type* LogicalExpr::getType() {
-	return type;
-}
-
 void EqualityExpr::Check() {
 	
-}
-
-Type* EqualityExpr::getType() {
-	return type;
-}
-
-Type* AssignExpr::getType() {
-	return type;
 }
 
 void FieldAccess::Check() {
@@ -285,6 +265,7 @@ void FieldAccess::Check() {
         {
                 /* This is the case where it's classname.methodname */
                 base->Check();
+                /* TODO Check for base == 'this' */
         }
         else
         {
@@ -343,6 +324,7 @@ void NewArrayExpr::Check() {
         {
             ReportError::Formatted(location,
                                         "Size for NewArray must be an integer");
+            type = Type::errorType;
         }
         elemType->Check();
         type = elemType;
@@ -354,6 +336,11 @@ void NewExpr::Check() {
                 ReportError::Formatted(cType->GetLocation(),
                                 "No declaration found for class '%s'",
                                 cType->GetId()->GetName());
+                type = Type::errorType;
+        }
+        else
+        {
+                type = cType;
         }
 }
 
@@ -370,12 +357,15 @@ void This::Check() {
 }
 
 void ReadIntegerExpr::Check() {
+        type = Type::intType;
 }
 
 void ReadLineExpr::Check() {
+        type = Type::stringType;
 }
 
 void EmptyExpr::Check() {
+        type = Type::nullType;
 }
 
 void LValue::Check() {
