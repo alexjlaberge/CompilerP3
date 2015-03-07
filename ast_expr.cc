@@ -8,6 +8,7 @@
 #include <string.h>
 #include "errors.h"
 #include "symbols.h"
+#include <cassert>
 
 IntConstant::IntConstant(yyltype loc, int val) : Expr(loc) {
     value = val;
@@ -200,7 +201,32 @@ Type* ArithmeticExpr::getType() {
 }
 
 void RelationalExpr::Check() {
-	
+        left->Check();
+        op->Check();
+        right->Check();
+
+        assert(left->getType());
+        assert(right->getType());
+
+        if (left->getType()->operator!=(right->getType()))
+        {
+                ReportError::Formatted(location,
+                                "Cannot compare %s with %s",
+                                left->getType()->getTypeName(),
+                                right->getType()->getTypeName());
+                type = Type::errorType;
+        }
+        else if(left->getType()->operator!=(Type::intType) &&
+                        left->getType()->operator!=(Type::doubleType))
+        {
+                ReportError::Formatted(location,
+                                "Must compare numbers");
+                type = Type::errorType;
+        }
+        else
+        {
+                type = Type::boolType;
+        }
 }
 
 Type* RelationalExpr::getType() {
@@ -208,7 +234,24 @@ Type* RelationalExpr::getType() {
 }
 
 void LogicalExpr::Check() {
-	
+        left->Check();
+        op->Check();
+        right->Check();
+
+        assert(left->getType());
+        assert(right->getType());
+
+        if (left->getType()->operator!=(right->getType()) ||
+                        left->getType()->operator!=(Type::boolType))
+        {
+                ReportError::Formatted(location,
+                                "Result of logical expression must be a bool");
+                type = Type::errorType;
+        }
+        else
+        {
+                type = Type::boolType;
+        }
 }
 
 Type* LogicalExpr::getType() {
@@ -338,6 +381,9 @@ void AssignExpr::Check() {
         {
                 return;
         }
+
+        assert(left->getType());
+        assert(right->getType());
 
         if(right->getType()->operator!=(left->getType()))
         {
