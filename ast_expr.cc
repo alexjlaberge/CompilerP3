@@ -254,6 +254,36 @@ void EqualityExpr::Check() {
         CompoundExpr::Check();
 
         compound_expr_return_if_errors();
+
+        if (left->getType() != Type::intType &&
+                        left->getType() != Type::doubleType)
+        {
+                ReportError::Formatted(left->GetLocation(),
+                                "Operand must be numerical");
+                type = Type::errorType;
+                return;
+        }
+
+        if (right->getType() != Type::intType &&
+                        right->getType() != Type::doubleType)
+        {
+                ReportError::Formatted(right->GetLocation(),
+                                "Operand must be numerical");
+                type = Type::errorType;
+                return;
+        }
+
+        if (left->getType()->operator!=(right->getType()))
+        {
+                ReportError::Formatted(location,
+                                "Operands %s and %s are not same type",
+                                left->getType()->getTypeName(),
+                                right->getType()->getTypeName());
+                type = Type::errorType;
+                return;
+        }
+
+        type = Type::boolType;
 }
 
 void FieldAccess::Check() {
