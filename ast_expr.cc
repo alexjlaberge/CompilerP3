@@ -333,8 +333,11 @@ void AssignExpr::Check() {
         op->Check();
         right->Check();
 
-        // Not sure what the below is for:
-        // if (left->getType() != Type::errorType && right->getType() != Type::errorType)
+        if (left->getType() == Type::errorType ||
+                        right->getType() == Type::errorType)
+        {
+                return;
+        }
 
         if(right->getType()->operator!=(left->getType()))
         {

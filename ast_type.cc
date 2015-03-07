@@ -89,6 +89,5 @@ bool NamedType::IsDeclared() {
 
 bool Type::operator!=(const Type *rhs) const
 {
-        printf("Comparing %s with %s\n", getTypeName(), rhs->getTypeName());
         return (strcmp(getTypeName(), rhs->getTypeName()) != 0);
 }
