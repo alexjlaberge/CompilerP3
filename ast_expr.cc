@@ -303,9 +303,12 @@ void FieldAccess::Check() {
                         ReportError::Formatted(location,
                                         "No declaration found for variable '%s'",
                                         field->GetName());
-                        return;
+                        type = Type::errorType;
                 }
-                type = d->getType();
+                else
+                {
+                        type = d->getType();
+                }
         }
 }
 
