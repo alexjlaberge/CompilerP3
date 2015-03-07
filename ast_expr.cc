@@ -233,12 +233,9 @@ void RelationalExpr::Check() {
 }
 
 void LogicalExpr::Check() {
-        left->Check();
-        op->Check();
-        right->Check();
+        CompoundExpr::Check();
 
-        assert(left->getType());
-        assert(right->getType());
+        compound_expr_return_if_errors();
 
         if (left->getType()->operator!=(right->getType()) ||
                         left->getType()->operator!=(Type::boolType))
@@ -254,7 +251,9 @@ void LogicalExpr::Check() {
 }
 
 void EqualityExpr::Check() {
-	
+        CompoundExpr::Check();
+
+        compound_expr_return_if_errors();
 }
 
 void FieldAccess::Check() {
