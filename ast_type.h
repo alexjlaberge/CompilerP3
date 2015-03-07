@@ -11,6 +11,7 @@
 
 #include "ast.h"
 #include "list.h"
+ #include <string.h>
 
 
 class Type : public Node 
@@ -28,7 +29,7 @@ class Type : public Node
     const char *GetPrintNameForNode() { return "Type"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
-    char *getTypeName() {return typeName;}
+    virtual const char *getTypeName() {return typeName;}
 };
 
 class NamedType : public Type 
@@ -44,6 +45,7 @@ class NamedType : public Type
     bool IsDeclared();
     const Identifier * GetId() { return id; }
     virtual void Check();
+    const char *getTypeName() {return id->GetName();}
 };
 
 class ArrayType : public Type 
@@ -57,6 +59,8 @@ class ArrayType : public Type
     const char *GetPrintNameForNode() { return "ArrayType"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+    const char *getTypeName() {
+      const char* a = elemType->getTypeName(); strcat((char*)a, (const char*)"[]"); return a;}
 };
 
  

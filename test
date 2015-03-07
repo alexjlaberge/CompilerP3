@@ -1,8 +1,9 @@
+class Cow{
+	
+}
+
 int main()
 {
-	int a;
-	int b;
-	double c;
-	a = c + b;
-	return a;
+	int[] a;
+	a = NewArray(5, int);
 }

@@ -233,13 +233,15 @@ void FieldAccess::Check() {
         field->Check();
         VarDecl* d = declared_variables.Lookup(field->GetName());
         type = d->getType();
+        printf("%s", type->getTypeName());
         //printf("%s \n", field->GetName());
         //printf("%s", type->getTypeName());
-
         if(d == nullptr)
         {
             //ReportError
         }
+
+
 
         if (base != nullptr)
         {
@@ -305,6 +307,7 @@ void NewArrayExpr::Check() {
                                         "Size for NewArray must be an integer");
         }
         elemType->Check();
+        type = elemType;
 }
 
 void NewExpr::Check() {
