@@ -86,3 +86,9 @@ void ArrayType::Check() {
 bool NamedType::IsDeclared() {
         return (declared_types.Lookup(id->GetName()) != nullptr);
 }
+
+bool Type::operator!=(const Type *rhs) const
+{
+        printf("Comparing %s with %s\n", getTypeName(), rhs->getTypeName());
+        return (strcmp(getTypeName(), rhs->getTypeName()) != 0);
+}

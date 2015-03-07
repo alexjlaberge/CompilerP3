@@ -29,7 +29,8 @@ class Type : public Node
     const char *GetPrintNameForNode() { return "Type"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
-    virtual const char *getTypeName() {return typeName;}
+    virtual const char *getTypeName() const {return typeName;}
+    virtual bool operator!=(const Type *rhs) const;
 };
 
 class NamedType : public Type 
@@ -45,7 +46,7 @@ class NamedType : public Type
     bool IsDeclared();
     const Identifier * GetId() { return id; }
     virtual void Check();
-    const char *getTypeName() {return id->GetName();}
+    const char *getTypeName() const {return id->GetName();}
 };
 
 class ArrayType : public Type 
@@ -59,7 +60,7 @@ class ArrayType : public Type
     const char *GetPrintNameForNode() { return "ArrayType"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
-    const char *getTypeName() {
+    const char *getTypeName() const {
       const char* a = elemType->getTypeName(); strcat((char*)a, (const char*)"[]"); return a;}
 };
 

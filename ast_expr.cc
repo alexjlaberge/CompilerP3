@@ -183,7 +183,7 @@ void CompoundExpr::Check() {
 void ArithmeticExpr::Check() {
     left->Check();
     right->Check();
-    if(left->getType() != right->getType())
+    if(left->getType()->operator!=(right->getType()))
     {
         ReportError::Formatted(op->GetLocation(), "Incompatible operands: %s %s %s", left->getType()->getTypeName(), op->getOp(), right->getType()->getTypeName());
         type = Type::errorType;
@@ -227,7 +227,6 @@ Type* AssignExpr::getType() {
 	return type;
 }
 
-
 void FieldAccess::Check() {
         //printf("%s \n", field->GetName());
         //printf("%s", type->getTypeName());
@@ -253,19 +252,14 @@ void FieldAccess::Check() {
                 }
                 type = d->getType();
         }
-
 }
 
 void ArrayAccess::Check() {
         base->Check();
         subscript->Check();
-        if (typeid(*subscript).hash_code() != typeid(IntConstant).hash_code())
+        if (subscript->getType()->operator!=(Type::intType))
         {
                 /* TODO ERROR */
-        }
-        if(strcmp(subscript->getType()->getTypeName(), "int"))
-        {
-            //Report Error
         }
 }
 
@@ -292,11 +286,7 @@ void Call::Check() {
 }
 
 void NewArrayExpr::Check() {
-        if (typeid(*size).hash_code() != typeid(IntConstant).hash_code())
-        {
-                /* TODO ERROR */
-        }
-        if(strcmp(size->getType()->getTypeName(), "int"))
+        if(size->getType()->operator!=(Type::intType))
         {
             ReportError::Formatted(location,
                                         "Size for NewArray must be an integer");
@@ -342,11 +332,15 @@ void AssignExpr::Check() {
         left->Check();
         op->Check();
         right->Check();
-        //printf("%s",left->getType()->getTypeName());
-        if(left->getType() != right->getType() && left->getType() != Type::errorType && right->getType() != Type::errorType)
+
+        // Not sure what the below is for:
+        // if (left->getType() != Type::errorType && right->getType() != Type::errorType)
+
+        if(right->getType()->operator!=(left->getType()))
         {
-            ReportError::Formatted(op->GetLocation(), "Incompatible operands: %s = %s", 
-                left->getType()->getTypeName(), 
-                    right->getType()->getTypeName());
+                ReportError::Formatted(op->GetLocation(),
+                                "Incompatible operands: %s = %s",
+                                left->getType()->getTypeName(),
+                                right->getType()->getTypeName());
         }
 }

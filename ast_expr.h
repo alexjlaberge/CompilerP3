@@ -13,10 +13,7 @@
 #include "ast.h"
 #include "ast_stmt.h"
 #include "list.h"
-
-class NamedType; // for new
-class Type; // for NewArray
-
+#include "ast_type.h"
 
 class Expr : public Stmt 
 {
@@ -252,7 +249,7 @@ class NewArrayExpr : public Expr
   protected:
     Expr *size;
     Type *elemType;
-    
+
   public:
     NewArrayExpr(yyltype loc, Expr *sizeExpr, Type *elemType);
     const char *GetPrintNameForNode() { return "NewArrayExpr"; }
