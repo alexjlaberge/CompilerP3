@@ -229,19 +229,8 @@ Type* AssignExpr::getType() {
 
 
 void FieldAccess::Check() {
-        //printf("FIELD");
-        field->Check();
-        VarDecl* d = declared_variables.Lookup(field->GetName());
-        type = d->getType();
-        printf("%s", type->getTypeName());
         //printf("%s \n", field->GetName());
         //printf("%s", type->getTypeName());
-        if(d == nullptr)
-        {
-            //ReportError
-        }
-
-
 
         if (base != nullptr)
         {
@@ -251,12 +240,18 @@ void FieldAccess::Check() {
         else
         {
                 /* this is the case where it's varname op */
-                if (declared_variables.Lookup(field->GetName()) == nullptr)
+                VarDecl* d = declared_variables.Lookup(field->GetName());
+
+                field->Check();
+
+                if(d == nullptr)
                 {
                         ReportError::Formatted(location,
                                         "No declaration found for variable '%s'",
                                         field->GetName());
+                        return;
                 }
+                type = d->getType();
         }
 
 }
