@@ -300,17 +300,14 @@ void FieldAccess::Check() {
         if (base != nullptr)
         {
                 base->Check();
-                std::cout << "FieldAccess for " << field->GetName() << std::endl << std::flush;
-                std::cout << "at " << base->getType()->getTypeName() << std::endl << std::flush;
-                /* This is the case where it's classname.methodname */
-                Type* t = base->getType();
-                const Decl* c = declared_classes.Lookup(t->getTypeName());
-                const Decl* var = c->getVariable(c->getName());
-                std::cout << t->getTypeName() << std::flush;
-                if(var == nullptr)
+
+                const Decl *cls = parent->getVariable(base->getType()->getTypeName());
+                const Decl *var = cls->getVariable(field->GetName());
+                if (var == nullptr)
                 {
                         ReportError::Formatted(location,
-                                        "No declaration found for variable '%s'",
+                                        "Class %s does not have variable %s",
+                                        base->getType()->getTypeName(),
                                         field->GetName());
                         type = Type::errorType;
                 }
@@ -318,7 +315,6 @@ void FieldAccess::Check() {
                 {
                         type = var->getType();
                 }
-                /* TODO Check for base == 'this' */
         }
         else
         {
@@ -374,7 +370,7 @@ void Call::Check() {
                         return;
                 }
 
-                if (!type_exists(base->getType()->getTypeName()))
+                if (parent->getVariable(base->getType()->getTypeName()) == nullptr)
                 {
                         type = Type::errorType;
                         return;
@@ -393,7 +389,7 @@ void Call::Check() {
                 if (fn == nullptr)
                 {
                         ReportError::Formatted(field->GetLocation(),
-                                        "%s has no such method %s",
+                                        "%s has no such field '%s'",
                                         base->getType()->getTypeName(),
                                         field->GetName());
                         type = Type::errorType;
@@ -409,7 +405,7 @@ void Call::Check() {
                 if (fn == nullptr)
                 {
                         ReportError::Formatted(field->GetLocation(),
-                                        "No such method %s",
+                                        "No declaration found for function '%s'",
                                         field->GetName());
                         type = Type::errorType;
                 }
@@ -467,6 +463,7 @@ void This::Check() {
         {
                 ReportError::Formatted(location,
                                 "'this' used outside of class function");
+                type = Type::errorType;
         }
         else
         {
