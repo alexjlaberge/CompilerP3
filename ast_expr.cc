@@ -18,6 +18,12 @@
             return; \
     }
 
+#define type_assert(expr) \
+        if (!expr) { \
+                ReportError::Formatted(location, "Null type"); \
+                assert(expr); \
+        }
+
 IntConstant::IntConstant(yyltype loc, int val) : Expr(loc) {
     value = val;
     type = new Type("int");
@@ -179,13 +185,14 @@ void CompoundExpr::Check() {
         if (left != nullptr)
         {
                 left->Check();
-                assert(left->getType());
+
+                type_assert(left->getType());
         }
 
         op->Check();
 
         right->Check();
-        assert(right->getType());
+        type_assert(right->getType());
 }
 
 void ArithmeticExpr::Check() {
@@ -359,6 +366,22 @@ void Call::Check() {
                 field->Check();
 
                 const Decl *fn = base->getVariable(field->GetName());
+                if (fn == nullptr)
+                {
+                        ReportError::Formatted(field->GetLocation(),
+                                        "%s has no such method %s",
+                                        base->getType()->getTypeName(),
+                                        field->GetName());
+                        type = Type::errorType;
+                }
+                else
+                {
+                        type = fn->getType();
+                }
+        }
+        else
+        {
+                const Decl *fn = parent->getVariable(field->GetName());
                 if (fn == nullptr)
                 {
                         ReportError::Formatted(field->GetLocation(),
