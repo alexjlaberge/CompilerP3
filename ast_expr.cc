@@ -435,13 +435,8 @@ void Call::Check() {
         {
                 base->Check();
 
-                if (base->getType() == Type::errorType)
-                {
-                        type = Type::errorType;
-                        return;
-                }
-
-                if (base->getType() == nullptr)
+                if (base->getType() == nullptr ||
+                                base->getType() == Type::errorType)
                 {
                         type = Type::errorType;
                         return;
@@ -491,11 +486,23 @@ void Call::Check() {
                                         "No declaration found for function '%s'",
                                         field->GetName());
                         type = Type::errorType;
+                        return;
                 }
                 else
                 {
                         type = fn->getType();
                 }
+        }
+
+        for (i = 0; i < actuals->NumElements(); i++)
+        {
+                actuals->Nth(i)->Check();
+        }
+
+        if (fn == nullptr)
+        {
+                type = Type::errorType;
+                return;
         }
 
         if (actuals->NumElements() != fn->NumFormals())
@@ -509,9 +516,8 @@ void Call::Check() {
                 return;
         }
 
-        while (i < actuals->NumElements())
+        for (i = 0; i < actuals->NumElements(); i++)
         {
-                actuals->Nth(i)->Check();
                 if (actuals->Nth(i)->getType()->operator!=(fn->formalType(i)))
                 {
                         ReportError::Formatted(actuals->Nth(i)->GetLocation(),
@@ -522,7 +528,6 @@ void Call::Check() {
                         type = Type::errorType;
                         return;
                 }
-                i++;
         }
 }
 

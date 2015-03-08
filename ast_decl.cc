@@ -90,9 +90,10 @@ void FnDecl::Check() {
                 formals->Nth(i)->Check();
                 i++;
         }
-        body->setLevel(level);
+
         body->Check();
-        /* TODO returnType->Check() */
+
+        returnType->Check();
 }
 
 void InterfaceDecl::Check() {
@@ -192,10 +193,20 @@ const ClassDecl *FnDecl::getThis() const
 
 const Type *FnDecl::formalType(int i) const
 {
-        return formals->Nth(i)->getType();
+        if (formals != nullptr)
+        {
+                return formals->Nth(i)->getType();
+        }
+
+        return nullptr;
 }
 
 int FnDecl::NumFormals() const
 {
-        return formals->NumElements();
+        if (formals != nullptr)
+        {
+                return formals->NumElements();
+        }
+
+        return 0;
 }
