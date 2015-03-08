@@ -253,7 +253,12 @@ void RelationalExpr::Check() {
         assert(left->getType());
         assert(right->getType());
 
-        if (left->getType()->operator!=(right->getType()))
+        if (left->getType() == Type::errorType ||
+                        right->getType() == Type::errorType)
+        {
+                type = Type::errorType;
+        }
+        else if (left->getType()->operator!=(right->getType()))
         {
                 ReportError::Formatted(location,
                                 "Cannot compare %s with %s",

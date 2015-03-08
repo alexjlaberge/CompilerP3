@@ -212,7 +212,8 @@ void ConditionalStmt::Check() {
 void ForStmt::Check() {
         init->Check(); 
         test->Check();
-        if(test->getType() != Type::boolType)
+        if(test->getType() != Type::errorType &&
+                        test->getType() != Type::boolType)
         {
                 ReportError::Formatted(test->GetLocation(),
                                 "Test expression must have boolean type");
