@@ -251,3 +251,8 @@ const Decl *Program::getVariable(const char *name) const
 
         return nullptr;
 }
+
+const Decl *Stmt::getVariable(const char *name) const
+{
+        return parent->getVariable(name);
+}
