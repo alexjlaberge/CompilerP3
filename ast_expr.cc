@@ -340,9 +340,17 @@ void FieldAccess::Check() {
 void ArrayAccess::Check() {
         base->Check();
         subscript->Check();
-        if (subscript->getType()->operator!=(Type::intType))
+
+        if (subscript->getType() != Type::intType)
         {
-                /* TODO ERROR */
+                ReportError::Formatted(subscript->GetLocation(),
+                                "Array subscript must be an integer, not %s",
+                                subscript->getType()->getTypeName());
+                type = Type::errorType;
+        }
+        else
+        {
+                type = base->getType();
         }
 }
 
@@ -370,20 +378,26 @@ void Call::Check() {
                         return;
                 }
 
-                if (parent->getVariable(base->getType()->getTypeName()) == nullptr)
+                const Decl *cls = parent->getVariable(base->getType()->getTypeName());
+                if (cls == nullptr)
                 {
+                        const Type *t = base->getType();
+                        assert(t);
+                        if (t == Type::intType ||
+                                        t == Type::doubleType ||
+                                        t == Type::boolType ||
+                                        t == Type::stringType)
+                        {
+                                ReportError::Formatted(field->GetLocation(),
+                                                "%s has no such field '%s'",
+                                                t->getTypeName(),
+                                                field->GetName());
+                        }
                         type = Type::errorType;
                         return;
                 }
 
                 field->Check();
-
-                const Decl *cls = parent->getVariable(base->getType()->getTypeName());
-                if (cls == nullptr)
-                {
-                        ReportError::Formatted(base->GetLocation(),
-                                        "No such class");
-                }
 
                 const Decl *fn = cls->getVariable(field->GetName());
                 if (fn == nullptr)

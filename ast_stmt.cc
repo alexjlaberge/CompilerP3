@@ -135,9 +135,12 @@ void PrintStmt::Check() {
 
         while (i < args->NumElements())
         {
+                args->Nth(i)->Check();
+
                 const Type *t = args->Nth(i)->getType();
+                assert(t);
                 if (t != Type::intType && t != Type::boolType &&
-                                t != Type::stringType)
+                                t != Type::stringType && t != Type::errorType)
                 {
                         ReportError::Formatted(args->Nth(i)->GetLocation(),
                                         "Incompatible argument %d: %s given, int/bool/string expected",
@@ -194,7 +197,9 @@ void ConditionalStmt::Check() {
 
 void ForStmt::Check() {
         init->Check(); 
+        test->Check();
         step->Check();
+        body->Check();
 }
 
 void IfStmt::Check() {
