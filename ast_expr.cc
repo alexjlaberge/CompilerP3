@@ -174,6 +174,8 @@ void StringConstant::Check() {
 }
 
 void CompoundExpr::Check() {
+        left->setLevel(level);
+        right->setLevel(level);
         if (left != nullptr)
         {
                 left->Check();
@@ -188,9 +190,7 @@ void CompoundExpr::Check() {
 
 void ArithmeticExpr::Check() {
         CompoundExpr::Check();
-
         compound_expr_return_if_errors();
-
     if (left->getType()->operator!=(right->getType()))
     {
         ReportError::Formatted(op->GetLocation(), "Incompatible operands: %s %s %s", left->getType()->getTypeName(), op->getOp(), right->getType()->getTypeName());
@@ -287,8 +287,10 @@ void EqualityExpr::Check() {
 }
 
 void FieldAccess::Check() {
-        //printf("%s \n", field->GetName());
-        //printf("%s", type->getTypeName());
+
+        //std::cout << "Found " << field->GetName() << " at " << scoped_variables.Lookup(field->GetName()) << std::endl;
+        if(scoped_variables.Lookup(field->GetName()) > level || scoped_variables.Lookup(field->GetName()) == 0)
+            ReportError::Formatted(location, "No declaration found for variable '%s'", field->GetName());
 
         if (base != nullptr)
         {
@@ -332,6 +334,9 @@ void Operator::Check() {
 }
 
 void Call::Check() {
+        
+        type = fn_types.Lookup(field->GetName());
+        //std::cout << fn_types.Lookup(field->GetName())->getTypeName();
         int i = 0;
 
         if (base != nullptr)
@@ -401,6 +406,9 @@ void LValue::Check() {
 }
 
 void AssignExpr::Check() {
+
+        left->setLevel(level);
+        right->setLevel(level);
         CompoundExpr::Check();
 
         compound_expr_return_if_errors();

@@ -26,7 +26,7 @@ void Program::PrintChildren(int indentLevel) {
 void Program::Check() {
         for(int i = 0; i < decls->NumElements(); i++)
         {
-            decls->Nth(i)->setLevel(0);
+            decls->Nth(i)->setLevel(1);
         }
 
         int i = 0;
@@ -197,6 +197,7 @@ void ForStmt::Check() {
 
 void IfStmt::Check() {
         //printf("eb");
+        test->setLevel(level);
         test->Check();
         body->setLevel(level);
         body->Check();
@@ -211,6 +212,7 @@ void IfStmt::Check() {
 }
 
 void ReturnStmt::Check() {
+        expr->setLevel(level);
         expr->Check(); //Evaluate to same type as Fn
 }
 
