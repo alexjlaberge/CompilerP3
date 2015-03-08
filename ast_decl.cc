@@ -147,3 +147,29 @@ void ClassDecl::Check() {
                 i++;
         }
 }
+
+const Decl * ClassDecl::getVariable(const char *name) const
+{
+        for (int i = 0; i < members->NumElements(); i++)
+        {
+                if (strcmp(members->Nth(i)->getName(), name) == 0)
+                {
+                        return members->Nth(i);
+                }
+        }
+
+        return parent->getVariable(name);
+}
+
+const Decl * FnDecl::getVariable(const char *name) const
+{
+        for (int i = 0; i < formals->NumElements(); i++)
+        {
+                if (strcmp(formals->Nth(i)->getName(), name) == 0)
+                {
+                        return formals->Nth(i);
+                }
+        }
+
+        return parent->getVariable(name);
+}

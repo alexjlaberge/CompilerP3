@@ -225,3 +225,29 @@ void Case::Check() {
                 i++;
         }
 }
+
+const Decl *StmtBlock::getVariable(const char *name) const
+{
+        for (int i = 0; i < decls->NumElements(); i++)
+        {
+                if (strcmp(decls->Nth(i)->getName(), name) == 0)
+                {
+                        return decls->Nth(i);
+                }
+        }
+
+        return parent->getVariable(name);
+}
+
+const Decl *Program::getVariable(const char *name) const
+{
+        for (int i = 0; i < decls->NumElements(); i++)
+        {
+                if (strcmp(decls->Nth(i)->getName(), name) == 0)
+                {
+                        return decls->Nth(i);
+                }
+        }
+
+        return nullptr;
+}

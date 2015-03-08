@@ -114,6 +114,7 @@ class CompoundExpr : public Expr
     CompoundExpr(Operator *op, Expr *rhs);             // for unary
     void PrintChildren(int indentLevel);
     virtual void Check();
+    virtual const Decl *getVariable(const char *name) const;
 };
 
 class ArithmeticExpr : public CompoundExpr 
@@ -201,6 +202,8 @@ class FieldAccess : public LValue
     const char *GetPrintNameForNode() { return "FieldAccess"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+
+    virtual const Decl *getVariable(const char *name) const;
 };
 
 /* Like field access, call is used both for qualified base.field()
@@ -219,6 +222,8 @@ class Call : public Expr
     const char *GetPrintNameForNode() { return "Call"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+
+    virtual const Decl *getVariable(const char *name) const;
 };
 
 class NewExpr : public Expr

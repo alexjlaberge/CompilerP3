@@ -63,12 +63,12 @@ class Node
     /**
      * Returns a Decl pointer by searching up the tree
      */
-    virtual const Decl *getVariable(const char *name) const { assert(0); }
+    virtual const Decl *getVariable(const char *name) const { return nullptr; }
 
     /**
      * Returns a pointer to 'this' by searching up the tree
      */
-    virtual const ClassDecl *getThis() const { assert(0); }
+    virtual const ClassDecl *getThis() const { return nullptr; }
 };
 
 

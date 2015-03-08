@@ -27,6 +27,8 @@ class Program : public Node
      const char *GetPrintNameForNode() { return "Program"; }
      void PrintChildren(int indentLevel);
      virtual void Check();
+
+     virtual const Decl *getVariable(const char *name) const;
 };
 
 class Stmt : public Node
@@ -47,6 +49,8 @@ class StmtBlock : public Stmt
     const char *GetPrintNameForNode() { return "StmtBlock"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+
+    virtual const Decl *getVariable(const char *name) const;
 };
 
   

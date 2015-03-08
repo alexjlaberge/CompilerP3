@@ -332,16 +332,45 @@ void Operator::Check() {
 }
 
 void Call::Check() {
-        type = declared_functions.Lookup(field->GetName())->getType();
-        //std::cout << fn_types.Lookup(field->GetName())->getTypeName();
         int i = 0;
 
         if (base != nullptr)
         {
                 base->Check();
-        }
 
-        field->Check();
+                if (base->getType() == Type::errorType)
+                {
+                        type = Type::errorType;
+                        return;
+                }
+
+                if (base->getType() == nullptr)
+                {
+                        type = Type::errorType;
+                        return;
+                }
+
+                if (!type_exists(base->getType()->getTypeName()))
+                {
+                        type = Type::errorType;
+                        return;
+                }
+
+                field->Check();
+
+                const Decl *fn = base->getVariable(field->GetName());
+                if (fn == nullptr)
+                {
+                        ReportError::Formatted(field->GetLocation(),
+                                        "No such method %s",
+                                        field->GetName());
+                        type = Type::errorType;
+                }
+                else
+                {
+                        type = fn->getType();
+                }
+        }
 
         while (i < actuals->NumElements())
         {
@@ -417,4 +446,24 @@ void AssignExpr::Check() {
                                 left->getType()->getTypeName(),
                                 right->getType()->getTypeName());
         }
+}
+
+const Decl *CompoundExpr::getVariable(const char *name) const
+{
+        return parent->getVariable(name);
+}
+
+const Decl *FieldAccess::getVariable(const char *name) const
+{
+        if (base != nullptr)
+        {
+                return base->getVariable(name);
+        }
+
+        return parent->getVariable(name);
+}
+
+const Decl *Call::getVariable(const char *name) const
+{
+        return parent->getVariable(name);
 }
