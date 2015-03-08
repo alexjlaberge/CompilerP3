@@ -301,22 +301,6 @@ void FieldAccess::Check() {
         {
                 /* This is the case where it's classname.methodname */
                 base->Check();
-                Type* t = base->getType();
-                const Decl* c = declared_classes.Lookup(t->getTypeName());
-                const Decl* var = c->getVariable(c->getName());
-                std::cout << t->getTypeName() << std::flush;
-                if(var == nullptr)
-                {
-                        ReportError::Formatted(location,
-                                        "No declaration found for variable '%s'",
-                                        field->GetName());
-                        type = Type::errorType;
-                }
-                else
-                {
-                        type = var->getType();
-                }
-                /* TODO Check for base == 'this' */
 
                 const Decl *cls = parent->getVariable(base->getType()->getTypeName());
                 const Decl *var = cls->getVariable(field->GetName());
