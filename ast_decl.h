@@ -59,6 +59,7 @@ class ClassDecl : public Decl
     virtual Type *getType() const { return new Type(id->GetName()); }
 
     virtual const Decl *getVariable(const char *name) const;
+    virtual const ClassDecl *getThis() const;
 };
 
 class InterfaceDecl : public Decl 
@@ -90,6 +91,7 @@ class FnDecl : public Decl
     virtual Type* getType() const {return returnType;}
 
     virtual const Decl *getVariable(const char *name) const;
+    virtual const ClassDecl *getThis() const;
 };
 
 #endif

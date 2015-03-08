@@ -26,7 +26,7 @@
 
 IntConstant::IntConstant(yyltype loc, int val) : Expr(loc) {
     value = val;
-    type = new Type("int");
+    type = Type::intType;
 }
 void IntConstant::PrintChildren(int indentLevel) { 
     printf("%d", value);
@@ -34,7 +34,7 @@ void IntConstant::PrintChildren(int indentLevel) {
 
 DoubleConstant::DoubleConstant(yyltype loc, double val) : Expr(loc) {
     value = val;
-    type = new Type("double");
+    type = Type::doubleType;
 }
 void DoubleConstant::PrintChildren(int indentLevel) { 
     printf("%g", value);
@@ -42,7 +42,7 @@ void DoubleConstant::PrintChildren(int indentLevel) {
 
 BoolConstant::BoolConstant(yyltype loc, bool val) : Expr(loc) {
     value = val;
-    type = new Type("bool");
+    type = Type::boolType;
 }
 void BoolConstant::PrintChildren(int indentLevel) { 
     printf("%s", value ? "true" : "false");
@@ -51,7 +51,7 @@ void BoolConstant::PrintChildren(int indentLevel) {
 StringConstant::StringConstant(yyltype loc, const char *val) : Expr(loc) {
     Assert(val != NULL);
     value = strdup(val);
-    type = new Type("string");
+    type = Type::stringType;
 }
 void StringConstant::PrintChildren(int indentLevel) { 
     printf("%s",value);
@@ -461,6 +461,15 @@ void NullConstant::Check() {
 }
 
 void This::Check() {
+        if (parent->getThis() == nullptr)
+        {
+                ReportError::Formatted(location,
+                                "'this' used outside of class function");
+        }
+        else
+        {
+                type = parent->getThis()->getType();
+        }
 }
 
 void ReadIntegerExpr::Check() {
@@ -513,4 +522,9 @@ const Decl *FieldAccess::getVariable(const char *name) const
 const Decl *Call::getVariable(const char *name) const
 {
         return parent->getVariable(name);
+}
+
+const ClassDecl *Expr::getThis() const
+{
+        return parent->getThis();
 }

@@ -182,7 +182,6 @@ void SwitchStmt::Check() {
 
 void ConditionalStmt::Check() {
         test->Check();
-        printf("checking");
         if(strcmp(test->getType()->getTypeName(), "bool"))
         {
             ReportError::Formatted(location, "Test expression must have boolean type");//Error
@@ -255,4 +254,9 @@ const Decl *Program::getVariable(const char *name) const
 const Decl *Stmt::getVariable(const char *name) const
 {
         return parent->getVariable(name);
+}
+
+const ClassDecl *Stmt::getThis() const
+{
+        return parent->getThis();
 }

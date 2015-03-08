@@ -38,6 +38,8 @@ class Stmt : public Node
      Stmt(yyltype loc) : Node(loc) {}
 
      virtual const Decl *getVariable(const char *name) const;
+
+     virtual const ClassDecl *getThis() const;
 };
 
 class StmtBlock : public Stmt 
