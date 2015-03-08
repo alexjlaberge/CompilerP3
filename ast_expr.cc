@@ -566,7 +566,7 @@ void This::Check() {
         if (parent->getThis() == nullptr)
         {
                 ReportError::Formatted(location,
-                                "'this' used outside of class function");
+                                "'this' is only valid within class scope");
                 type = Type::errorType;
         }
         else
