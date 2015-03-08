@@ -39,6 +39,8 @@ class VarDecl : public Decl
     void PrintChildren(int indentLevel);
     virtual void Check();
     virtual Type* getType() const {return type;}
+
+    virtual const Decl *getVariable(const char *name) const;
 };
 
 class ClassDecl : public Decl 

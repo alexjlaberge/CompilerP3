@@ -365,7 +365,14 @@ void Call::Check() {
 
                 field->Check();
 
-                const Decl *fn = base->getVariable(field->GetName());
+                const Decl *cls = parent->getVariable(base->getType()->getTypeName());
+                if (cls == nullptr)
+                {
+                        ReportError::Formatted(base->GetLocation(),
+                                        "No such class");
+                }
+
+                const Decl *fn = cls->getVariable(field->GetName());
                 if (fn == nullptr)
                 {
                         ReportError::Formatted(field->GetLocation(),
@@ -414,7 +421,9 @@ void NewArrayExpr::Check() {
 }
 
 void NewExpr::Check() {
-        if (!cType->IsDeclared())
+        const Decl *cls = parent->getVariable(cType->getTypeName());
+
+        if (cls == nullptr)
         {
                 ReportError::Formatted(cType->GetLocation(),
                                 "No declaration found for class '%s'",
