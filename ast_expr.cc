@@ -356,18 +356,37 @@ void EqualityExpr::Check() {
 void FieldAccess::Check() {
         if (base != nullptr)
         {
+                /* this is the classname.functionname variant */
+
                 base->Check();
                 field->Check();
 
                 const Decl *cls = parent->getVariable(base->getType()->getTypeName());
-                const Decl *var = cls->getVariable(field->GetName());
-                //std::cout << base->getType()->getTypeName() << std::endl;
+                const Decl *var = nullptr;
+
+                if (cls != nullptr)
+                {
+                        var = cls->getVariable(field->GetName());
+                }
+                else
+                {
+                        var = getVariable(field->GetName());
+                }
+
                 if (var == nullptr)
                 {
-                        ReportError::Formatted(location,
-                                        "Class %s does not have variable %s",
+                        ReportError::Formatted(field->GetLocation(),
+                                        "%s has no such field '%s'",
                                         base->getType()->getTypeName(),
                                         field->GetName());
+                        type = Type::errorType;
+                }
+                else if(dynamic_cast<const VarDecl*>(var) != nullptr)
+                {
+                        ReportError::Formatted(field->GetLocation(),
+                                        "%s field '%s' only accessible within class scope",
+                                        cls->getName(),
+                                        var->getName());
                         type = Type::errorType;
                 }
                 else
@@ -619,11 +638,6 @@ const Decl *CompoundExpr::getVariable(const char *name) const
 
 const Decl *FieldAccess::getVariable(const char *name) const
 {
-        if (base != nullptr)
-        {
-                return base->getVariable(name);
-        }
-
         return parent->getVariable(name);
 }
 
