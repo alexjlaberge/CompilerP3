@@ -1,9 +1,15 @@
+int c;
 class Cow{
 	
 }
 
+void abc()
+{
+	b = 2;
+}
+
 int main()
 {
-	int[] a;
-	a = NewArray(5, int);
+	int b;
+	abc();
 }

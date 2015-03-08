@@ -28,12 +28,15 @@
 #include "location.h"
 #include <iostream>
 #include <typeinfo>
+#include <map>
+
 
 class Node 
 {
   protected:
     yyltype *location;
     Node *parent;
+    int level;
 
   public:
     Node(yyltype loc);
