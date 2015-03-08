@@ -542,7 +542,13 @@ void Call::Check() {
 
         for (i = 0; i < actuals->NumElements(); i++)
         {
-                if (actuals->Nth(i)->getType()->operator!=(fn->formalType(i)))
+                const Type *actualType = actuals->Nth(i)->getType();
+                if (actualType == Type::errorType)
+                {
+                        continue;
+                }
+
+                if (actualType->operator!=(fn->formalType(i)))
                 {
                         ReportError::Formatted(actuals->Nth(i)->GetLocation(),
                                         "Incompatible argument %d: %s given, %s expected",
