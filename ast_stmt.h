@@ -34,6 +34,7 @@ class Program : public Node
 class Stmt : public Node
 {
   public:
+     bool canBeBroken;
      Stmt() : Node() {}
      Stmt(yyltype loc) : Node(loc) {}
 
@@ -86,6 +87,7 @@ class ForStmt : public LoopStmt
     const char *GetPrintNameForNode() { return "ForStmt"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+    bool isBreakable(){return true;}
 };
 
 class WhileStmt : public LoopStmt 
@@ -94,6 +96,7 @@ class WhileStmt : public LoopStmt
     WhileStmt(Expr *test, Stmt *body) : LoopStmt(test, body) {}
     const char *GetPrintNameForNode() { return "WhileStmt"; }
     void PrintChildren(int indentLevel);
+    bool isBreakable(){return true;}
 };
 
 class IfStmt : public ConditionalStmt 

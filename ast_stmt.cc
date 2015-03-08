@@ -88,6 +88,7 @@ ForStmt::ForStmt(Expr *i, Expr *t, Expr *s, Stmt *b): LoopStmt(t, b) {
 }
 
 void ForStmt::PrintChildren(int indentLevel) {
+    std::cout << isBreakable() << std::endl;
     init->Print(indentLevel+1, "(init) ");
     test->Print(indentLevel+1, "(test) ");
     step->Print(indentLevel+1, "(step) ");
@@ -95,6 +96,7 @@ void ForStmt::PrintChildren(int indentLevel) {
 }
 
 void WhileStmt::PrintChildren(int indentLevel) {
+    std::cout << isBreakable() << std::endl;
     test->Print(indentLevel+1, "(test) ");
     body->Print(indentLevel+1, "(body) ");
 }
@@ -216,6 +218,8 @@ void IfStmt::Check() {
 void ReturnStmt::Check() {
         expr->setLevel(level);
         expr->Check(); //Evaluate to same type as Fn
+        Type* t = expr->getType();
+        //Check that it matches fn type.
 }
 
 void Case::Check() {

@@ -1,9 +1,9 @@
 class Cow {
 	int c;
-	Cow a;
+	//Cow a;
 	int geta()
 	{
-		c = a.c;
+		//c = a.c;
 		return c;
 	}
 }
@@ -12,6 +12,7 @@ int main()
 {
 	Cow a;
 	int c;
-	c = a.c;
+	c = a.geta();
+	break;
 	return 1;
 }
