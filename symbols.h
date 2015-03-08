@@ -6,6 +6,7 @@
 
 extern Hashtable<ClassDecl*> declared_classes;
 extern Hashtable<FnDecl*> declared_functions;
+extern Hashtable <InterfaceDecl*> declared_interfaces;
 
 bool type_exists(const char *name);
 

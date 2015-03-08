@@ -5,6 +5,8 @@ using std::string;
 
 Hashtable<ClassDecl*> declared_classes;
 Hashtable<FnDecl*> declared_functions;
+Hashtable <InterfaceDecl*> declared_interfaces;
+
 
 bool type_exists(const char *name)
 {

@@ -52,6 +52,7 @@ void ClassDecl::PrintChildren(int indentLevel) {
 InterfaceDecl::InterfaceDecl(Identifier *n, List<Decl*> *m) : Decl(n) {
     Assert(n != NULL && m != NULL);
     (members=m)->SetParentAll(this);
+    declared_interfaces.Enter(n->GetName(), this);
 }
 
 void InterfaceDecl::PrintChildren(int indentLevel) {

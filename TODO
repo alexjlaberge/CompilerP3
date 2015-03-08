@@ -1,8 +1,6 @@
-DONE:
-BreakStmt
-DoubleConstant
-IntConstant
-BoolConstant
-StringConstant
-
-NOT DONE:
+Make sure implements is a valid interface declaration
+Make sure the class implements all portions of the interface
+Add all base class fns and vars to an extended class
+NamedType Checking
+ArrayType Checking
+...
