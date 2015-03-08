@@ -86,6 +86,7 @@ void FnDecl::Check() {
                 formals->Nth(i)->Check();
                 i++;
         }
+        body->setLevel(level);
         body->Check();
         /* TODO returnType->Check() */
 }
@@ -116,6 +117,11 @@ void VarDecl::Check() {
 
 void ClassDecl::Check() {
         Decl::Check();
+
+        for(int i = 0; i < members->NumElements(); i++)
+        {
+            members->Nth(i)->setLevel(level+1);
+        }
 
         int i = 0;
 

@@ -1,6 +1,11 @@
 int c;
 class Cow{
-	
+	int size;
+	int getSize()
+	{
+		int temp;
+		return temp;
+	}
 }
 
 void abc()
