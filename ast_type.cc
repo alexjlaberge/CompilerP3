@@ -57,9 +57,7 @@ NamedType::NamedType(Identifier *i) : Type(*i->GetLocation()) {
 
 void NamedType::Check()
 {
-        Type::Check();
-
-        if (!IsDeclared())
+        if (parent->getVariable(id->GetName()) == nullptr)
         {
                 ReportError::Formatted(location,
                                 "No declaration found for type '%s'",

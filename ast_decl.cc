@@ -174,3 +174,8 @@ const Decl * FnDecl::getVariable(const char *name) const
 
         return parent->getVariable(name);
 }
+
+const Decl * VarDecl::getVariable(const char *name) const
+{
+        return parent->getVariable(name);
+}
