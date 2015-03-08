@@ -317,6 +317,21 @@ void FieldAccess::Check() {
                         type = var->getType();
                 }
                 /* TODO Check for base == 'this' */
+
+                const Decl *cls = parent->getVariable(base->getType()->getTypeName());
+                const Decl *var = cls->getVariable(field->GetName());
+                if (var == nullptr)
+                {
+                        ReportError::Formatted(location,
+                                        "Class %s does not have variable %s",
+                                        base->getType()->getTypeName(),
+                                        field->GetName());
+                        type = Type::errorType;
+                }
+                else
+                {
+                        type = var->getType();
+                }
         }
         else
         {
@@ -465,6 +480,7 @@ void This::Check() {
         {
                 ReportError::Formatted(location,
                                 "'this' used outside of class function");
+                type = Type::errorType;
         }
         else
         {
