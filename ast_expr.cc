@@ -300,7 +300,7 @@ void LogicalExpr::Check() {
 
                 if (right->getType() != Type::boolType)
                 {
-                        ReportError::Formatted(right->GetLocation(),
+                        ReportError::Formatted(op->GetLocation(),
                                         "Incompatible operand: ! %s",
                                         right->getType()->getTypeName());
                         type = Type::errorType;

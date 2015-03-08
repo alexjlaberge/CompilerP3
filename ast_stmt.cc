@@ -190,9 +190,10 @@ void SwitchStmt::Check() {
 
 void ConditionalStmt::Check() {
         test->Check();
-        if(strcmp(test->getType()->getTypeName(), "bool"))
+        if(test->getType() != Type::boolType)
         {
-            ReportError::Formatted(location, "Test expression must have boolean type");//Error
+                ReportError::Formatted(location,
+                                "Test expression must have boolean type");
         }
         body->Check();
 }
@@ -200,20 +201,26 @@ void ConditionalStmt::Check() {
 void ForStmt::Check() {
         init->Check(); 
         test->Check();
+        if(test->getType() != Type::boolType)
+        {
+                ReportError::Formatted(test->GetLocation(),
+                                "Test expression must have boolean type");
+        }
         step->Check();
         body->Check();
 }
 
 void IfStmt::Check() {
-        //printf("eb");
-        test->setLevel(level);
         test->Check();
-        body->setLevel(level);
-        body->Check();
-        if(strcmp(test->getType()->getTypeName(), "bool"))
+        if(test->getType() != Type::errorType &&
+                        test->getType() != Type::boolType)
         {
-            ReportError::Formatted(location, "Test expression must have boolean type");//Error
+                ReportError::Formatted(test->GetLocation(),
+                                "Test expression must have boolean type");
         }
+
+        body->Check();
+
         if (elseBody != nullptr)
         {
                 elseBody->Check();
@@ -222,9 +229,29 @@ void IfStmt::Check() {
 
 void ReturnStmt::Check() {
         expr->setLevel(level);
-        expr->Check(); //Evaluate to same type as Fn
+        expr->Check();
         Type* t = expr->getType();
         //Check that it matches fn type.
+
+        Node *par = this;
+        FnDecl *fn = nullptr;
+        while (true)
+        {
+                par = par->GetParent();
+                fn = dynamic_cast<FnDecl*>(par);
+                if (fn != nullptr)
+                {
+                        break;
+                }
+        }
+
+        if (fn->getType()->operator!=(t))
+        {
+                ReportError::Formatted(expr->GetLocation(),
+                                "Incompatible return: %s given, %s expected",
+                                t->getTypeName(),
+                                fn->getType()->getTypeName());
+        }
 }
 
 void Case::Check() {
