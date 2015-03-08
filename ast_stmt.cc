@@ -24,6 +24,11 @@ void Program::PrintChildren(int indentLevel) {
 }
 
 void Program::Check() {
+        for(int i = 0; i < decls->NumElements(); i++)
+        {
+            decls->Nth(i)->setLevel(0);
+        }
+
         int i = 0;
         while (i < decls->NumElements())
         {
@@ -35,16 +40,6 @@ void Program::Check() {
 StmtBlock::StmtBlock(List<VarDecl*> *d, List<Stmt*> *s):Stmt() {
     Assert(d != NULL && s != NULL);
     (decls=d)->SetParentAll(this);
-    cout << "StmtBlock " << level << endl;
-    if(parent != nullptr)
-    level = parent->getLevel() + 1;
-    else
-        level = 0;
-    for(int i = 0; i < d->NumElements(); i++)
-    {
-        d->Nth(i)->setLevel(level);
-        d->Nth(i)->addLevel();
-    }
     (stmts=s)->SetParentAll(this);
     
 }
@@ -56,6 +51,15 @@ void StmtBlock::PrintChildren(int indentLevel) {
 
 void StmtBlock::Check()
 {
+        for(int i = 0; i < decls->NumElements(); i++)
+        {
+            decls->Nth(i)->setLevel(level+1);
+        }
+        for(int i = 0; i < stmts->NumElements(); i++)
+        {
+            stmts->Nth(i)->setLevel(level+1);
+        }
+
         int i = 0;
 
         while (i < decls->NumElements())
@@ -194,6 +198,8 @@ void ForStmt::Check() {
 void IfStmt::Check() {
         //printf("eb");
         test->Check();
+        body->setLevel(level);
+        body->Check();
         if(strcmp(test->getType()->getTypeName(), "bool"))
         {
             ReportError::Formatted(location, "Test expression must have boolean type");//Error

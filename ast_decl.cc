@@ -23,7 +23,6 @@ VarDecl::VarDecl(Identifier *n, Type *t) : Decl(n) {
     Assert(n != NULL && t != NULL);
     (type=t)->SetParent(this);
     declared_variables.Enter(n->GetName(), this);
-    std::cout << n->GetName() << " " << getLevel() << std::endl;
 }
   
 void VarDecl::PrintChildren(int indentLevel) { 
@@ -69,6 +68,7 @@ FnDecl::FnDecl(Identifier *n, Type *r, List<VarDecl*> *d) : Decl(n) {
 
 void FnDecl::SetFunctionBody(Stmt *b) { 
     (body=b)->SetParent(this);
+    body->setLevel(level);
 }
 
 void FnDecl::PrintChildren(int indentLevel) {
@@ -110,6 +110,8 @@ void Decl::Check() {
 void VarDecl::Check() {
         Decl::Check();
         type->Check();
+        std::cout << id->GetName() << " " << getLevel() << std::endl;
+
 }
 
 void ClassDecl::Check() {
