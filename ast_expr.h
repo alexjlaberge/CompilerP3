@@ -24,6 +24,7 @@ class Expr : public Stmt
     virtual Type* getType() {return type;}
 
     virtual const ClassDecl *getThis() const;
+    virtual bool isCall() {return false;}
 };
 
 /* This node type is used for those places where an expression is optional.
@@ -224,7 +225,7 @@ class Call : public Expr
     const char *GetPrintNameForNode() { return "Call"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
-
+    bool isCall(){return true;}
     virtual const Decl *getVariable(const char *name) const;
 };
 

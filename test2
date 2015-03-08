@@ -1,8 +1,14 @@
 class Cow {
 	int c;
+	Cow a;
+	int geta()
+	{
+		c = a.c;
+		return c;
+	}
 }
 
-Cow main()
+int main()
 {
 	Cow a;
 	int c;
