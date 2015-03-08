@@ -556,6 +556,8 @@ void Call::Check() {
 }
 
 void NewArrayExpr::Check() {
+        size->Check();
+
         if(size->getType()->operator!=(Type::intType))
         {
             ReportError::Formatted(size->GetLocation(),
