@@ -9,7 +9,13 @@
 
 Decl::Decl(Identifier *n) : Node(*n->GetLocation()) {
     Assert(n != NULL);
-    (id=n)->SetParent(this); 
+    (id=n)->SetParent(this);
+    if(parent != nullptr)
+    {
+        level = parent->getLevel();
+    }
+    else
+        level = 0; 
 }
 
 
@@ -17,6 +23,7 @@ VarDecl::VarDecl(Identifier *n, Type *t) : Decl(n) {
     Assert(n != NULL && t != NULL);
     (type=t)->SetParent(this);
     declared_variables.Enter(n->GetName(), this);
+    std::cout << n->GetName() << " " << getLevel() << std::endl;
 }
   
 void VarDecl::PrintChildren(int indentLevel) { 

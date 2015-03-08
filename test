@@ -12,4 +12,9 @@ int main()
 {
 	int b;
 	abc();
+	if(true)
+	{
+		int d;
+	}
+	d = 2;
 }

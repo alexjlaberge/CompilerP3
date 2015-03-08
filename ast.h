@@ -41,7 +41,10 @@ class Node
   public:
     Node(yyltype loc);
     Node();
-    
+
+    void addLevel() {level++; }//std::cout << level;}
+    int getLevel() {return level;}
+    void setLevel(int l) {level = l;}
     yyltype *GetLocation()   { return location; }
     void SetParent(Node *p)  { parent = p; }
     Node *GetParent()        { return parent; }

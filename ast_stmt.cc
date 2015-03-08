@@ -32,10 +32,21 @@ void Program::Check() {
         }
 }
 
-StmtBlock::StmtBlock(List<VarDecl*> *d, List<Stmt*> *s) {
+StmtBlock::StmtBlock(List<VarDecl*> *d, List<Stmt*> *s):Stmt() {
     Assert(d != NULL && s != NULL);
     (decls=d)->SetParentAll(this);
+    cout << "StmtBlock " << level << endl;
+    if(parent != nullptr)
+    level = parent->getLevel() + 1;
+    else
+        level = 0;
+    for(int i = 0; i < d->NumElements(); i++)
+    {
+        d->Nth(i)->setLevel(level);
+        d->Nth(i)->addLevel();
+    }
     (stmts=s)->SetParentAll(this);
+    
 }
 
 void StmtBlock::PrintChildren(int indentLevel) {
