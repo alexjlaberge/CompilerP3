@@ -621,7 +621,7 @@ void ReadLineExpr::Check() {
 }
 
 void EmptyExpr::Check() {
-        type = Type::nullType;
+        type = nullptr;
 }
 
 void LValue::Check() {
