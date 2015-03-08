@@ -22,14 +22,6 @@
  */
 int main(int argc, char *argv[])
 {
-        declared_types.Enter("int", (Decl *) Type::intType);
-        declared_types.Enter("double", (Decl *) Type::doubleType);
-        declared_types.Enter("void", (Decl *) Type::voidType);
-        declared_types.Enter("bool", (Decl *) Type::boolType);
-        declared_types.Enter("null", (Decl *) Type::nullType);
-        declared_types.Enter("string", (Decl *) Type::stringType);
-        declared_types.Enter("error", (Decl *) Type::errorType);
-
         ParseCommandLine(argc, argv);
 
         InitScanner();
@@ -37,4 +29,3 @@ int main(int argc, char *argv[])
         yyparse();
         return (ReportError::NumErrors() == 0? 0 : -1);
 }
-

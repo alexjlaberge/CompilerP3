@@ -289,8 +289,6 @@ void EqualityExpr::Check() {
 void FieldAccess::Check() {
 
         //std::cout << "Found " << field->GetName() << " at " << scoped_variables.Lookup(field->GetName()) << std::endl;
-        if(scoped_variables.Lookup(field->GetName()) > level || scoped_variables.Lookup(field->GetName()) == 0)
-            ReportError::Formatted(location, "No declaration found for variable '%s'", field->GetName());
 
         if (base != nullptr)
         {
@@ -301,11 +299,11 @@ void FieldAccess::Check() {
         else
         {
                 /* this is the case where it's varname op */
-                VarDecl* d = declared_variables.Lookup(field->GetName());
+                const Decl *var = getVariable(field->GetName());
 
                 field->Check();
 
-                if(d == nullptr)
+                if(var == nullptr)
                 {
                         ReportError::Formatted(location,
                                         "No declaration found for variable '%s'",
@@ -314,7 +312,7 @@ void FieldAccess::Check() {
                 }
                 else
                 {
-                        type = d->getType();
+                        type = var->getType();
                 }
         }
 }
@@ -334,8 +332,7 @@ void Operator::Check() {
 }
 
 void Call::Check() {
-        
-        type = fn_types.Lookup(field->GetName());
+        type = declared_functions.Lookup(field->GetName())->getType();
         //std::cout << fn_types.Lookup(field->GetName())->getTypeName();
         int i = 0;
 

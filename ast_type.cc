@@ -38,7 +38,7 @@ void Type::Check()
                 return;
         }
 
-        if (declared_types.Lookup(typeName) == nullptr)
+        if (!type_exists(typeName))
         {
                 ReportError::Formatted(location,
                                 "No declaration found for type '%s'",
@@ -84,7 +84,7 @@ void ArrayType::Check() {
 }
 
 bool NamedType::IsDeclared() {
-        return (declared_types.Lookup(id->GetName()) != nullptr);
+        return type_exists(id->GetName());
 }
 
 bool Type::operator!=(const Type *rhs) const

@@ -15,14 +15,15 @@ Decl::Decl(Identifier *n) : Node(*n->GetLocation()) {
         level = parent->getLevel();
     }
     else
+    {
         level = 0; 
+    }
 }
 
 
 VarDecl::VarDecl(Identifier *n, Type *t) : Decl(n) {
     Assert(n != NULL && t != NULL);
     (type=t)->SetParent(this);
-    declared_variables.Enter(n->GetName(), this);
     //std::cout << n->GetName() << " LEVEL " << level << std::endl;
 }
   
@@ -38,8 +39,6 @@ ClassDecl::ClassDecl(Identifier *n, NamedType *ex, List<NamedType*> *imp, List<D
     if (extends) extends->SetParent(this);
     (implements=imp)->SetParentAll(this);
     (members=m)->SetParentAll(this);
-
-    declared_types.Enter(n->GetName(), this);
 }
 
 void ClassDecl::PrintChildren(int indentLevel) {
@@ -65,7 +64,6 @@ FnDecl::FnDecl(Identifier *n, Type *r, List<VarDecl*> *d) : Decl(n) {
     (returnType=r)->SetParent(this);
     (formals=d)->SetParentAll(this);
     body = NULL;
-    fn_types.Enter(n->GetName(), r);
 }
 
 void FnDecl::SetFunctionBody(Stmt *b) { 
@@ -118,9 +116,7 @@ void VarDecl::Check() {
         type->Check();
         //scoped_variables.emplace((char*)id->GetName(), getLevel());
         //std::cout << "Entering " << id->GetName() << " at " << getLevel() << std::endl; 
-        scoped_variables.Enter(id->GetName(), getLevel(), false);
         //std::cout << id->GetName() << " " << getLevel() << std::endl;
-
 }
 
 void ClassDecl::Check() {

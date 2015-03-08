@@ -24,6 +24,7 @@ class Decl : public Node
   public:
     Decl(Identifier *name);
     virtual void Check();
+    virtual Type * getType() const = 0;
 };
 
 class VarDecl : public Decl 
@@ -36,7 +37,7 @@ class VarDecl : public Decl
     const char *GetPrintNameForNode() { return "VarDecl"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
-    Type* getType() {return type;}
+    virtual Type* getType() const {return type;}
 };
 
 class ClassDecl : public Decl 
@@ -52,6 +53,7 @@ class ClassDecl : public Decl
     const char *GetPrintNameForNode() { return "ClassDecl"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+    virtual Type *getType() const { return new Type(id->GetName()); }
 };
 
 class InterfaceDecl : public Decl 
@@ -64,6 +66,7 @@ class InterfaceDecl : public Decl
     const char *GetPrintNameForNode() { return "InterfaceDecl"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+    virtual Type *getType() const { return nullptr; }
 };
 
 class FnDecl : public Decl 
@@ -79,7 +82,7 @@ class FnDecl : public Decl
     const char *GetPrintNameForNode() { return "FnDecl"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
-    Type* getType() {return returnType;}
+    virtual Type* getType() const {return returnType;}
 };
 
 #endif

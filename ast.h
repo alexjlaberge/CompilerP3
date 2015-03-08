@@ -29,7 +29,10 @@
 #include <iostream>
 #include <typeinfo>
 #include <map>
+#include <cassert>
 
+class Decl;
+class ClassDecl;
 
 class Node 
 {
@@ -56,6 +59,16 @@ class Node
     void Print(int indentLevel, const char *label = NULL); 
     virtual void PrintChildren(int indentLevel)  {}
     virtual void Check() = 0;
+
+    /**
+     * Returns a Decl pointer by searching up the tree
+     */
+    virtual const Decl *getVariable(const char *name) const { assert(0); }
+
+    /**
+     * Returns a pointer to 'this' by searching up the tree
+     */
+    virtual const ClassDecl *getThis() const { assert(0); }
 };
 
 

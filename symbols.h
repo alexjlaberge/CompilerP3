@@ -4,10 +4,11 @@
 #include "hashtable.h"
 #include "ast_decl.h"
 
-extern int scope;
-extern Hashtable<Decl*> declared_types;
-extern Hashtable<VarDecl*> declared_variables;
-extern Hashtable<int> scoped_variables;
-extern Hashtable<Type*> fn_types;
+extern Hashtable<ClassDecl*> declared_classes;
+extern Hashtable<FnDecl*> declared_functions;
+
+bool type_exists(const char *name);
+
+bool add_type(const char *name, ClassDecl *decl);
 
 #endif /* _H_SYMBOLS */
