@@ -371,7 +371,7 @@ void Call::Check() {
                         return;
                 }
 
-                if (!type_exists(base->getType()->getTypeName()))
+                if (parent->getVariable(base->getType()->getTypeName()) == nullptr)
                 {
                         type = Type::errorType;
                         return;
@@ -390,7 +390,7 @@ void Call::Check() {
                 if (fn == nullptr)
                 {
                         ReportError::Formatted(field->GetLocation(),
-                                        "%s has no such method %s",
+                                        "%s has no such field '%s'",
                                         base->getType()->getTypeName(),
                                         field->GetName());
                         type = Type::errorType;
@@ -406,7 +406,7 @@ void Call::Check() {
                 if (fn == nullptr)
                 {
                         ReportError::Formatted(field->GetLocation(),
-                                        "No such method %s",
+                                        "No declaration found for function '%s'",
                                         field->GetName());
                         type = Type::errorType;
                 }
