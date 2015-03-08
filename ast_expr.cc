@@ -296,10 +296,11 @@ void EqualityExpr::Check() {
 void FieldAccess::Check() {
 
         //std::cout << "Found " << field->GetName() << " at " << scoped_variables.Lookup(field->GetName()) << std::endl;
-        std::cout << "Awe Yee " << field->GetName() << std::endl<<std::flush;
+        //std::cout << "Awe Yee " << field->GetName() << std::endl<<std::flush;
         if (base != nullptr)
         {
                 base->Check();
+                field->Check();
 
                 const Decl *cls = parent->getVariable(base->getType()->getTypeName());
                 const Decl *var = cls->getVariable(field->GetName());
