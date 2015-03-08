@@ -11,7 +11,7 @@
 #include <cassert>
 
 #define compound_expr_return_if_errors() \
-    if (left->getType() == Type::errorType || \
+    if ((left != nullptr && left->getType() == Type::errorType) || \
                     right->getType() == Type::errorType) \
     { \
             type = Type::errorType; \
@@ -176,8 +176,6 @@ void StringConstant::Check() {
 }
 
 void CompoundExpr::Check() {
-        left->setLevel(level);
-        right->setLevel(level);
         if (left != nullptr)
         {
                 left->Check();
@@ -194,15 +192,52 @@ void CompoundExpr::Check() {
 void ArithmeticExpr::Check() {
         CompoundExpr::Check();
         compound_expr_return_if_errors();
-    if (left->getType()->operator!=(right->getType()))
-    {
-        ReportError::Formatted(op->GetLocation(), "Incompatible operands: %s %s %s", left->getType()->getTypeName(), op->getOp(), right->getType()->getTypeName());
-        type = Type::errorType;
-    }
-    else
-    {
-        type = left->getType();
-    }
+
+        if (right->getType() != Type::intType &&
+                        right->getType() != Type::doubleType)
+        {
+                ReportError::Formatted(right->GetLocation(),
+                                "%s where int/double expected",
+                                right->getType()->getTypeName());
+                type = Type::errorType;
+                return;
+        }
+
+        if (left == nullptr)
+        {
+                if (strcmp(op->getOp(), "-") != 0)
+                {
+                        ReportError::Formatted(op->GetLocation(),
+                                        "Bad operator");
+                        type = Type::errorType;
+                        return;
+                }
+        }
+        else
+        {
+                if (left->getType() != Type::intType &&
+                                left->getType() != Type::doubleType)
+                {
+                        ReportError::Formatted(left->GetLocation(),
+                                        "%s where int/double expected",
+                                        left->getType()->getTypeName());
+                        type = Type::errorType;
+                        return;
+                }
+
+                if (left->getType()->operator!=(right->getType()))
+                {
+                        ReportError::Formatted(op->GetLocation(),
+                                        "Incompatible operands: %s %s %s",
+                                        left->getType()->getTypeName(),
+                                        op->getOp(),
+                                        right->getType()->getTypeName());
+                        type = Type::errorType;
+                        return;
+                }
+        }
+
+        type = right->getType();
 
 }
 
@@ -240,17 +275,42 @@ void LogicalExpr::Check() {
 
         compound_expr_return_if_errors();
 
-        if (left->getType()->operator!=(right->getType()) ||
-                        left->getType()->operator!=(Type::boolType))
+        if (left == nullptr)
         {
-                ReportError::Formatted(location,
-                                "Result of logical expression must be a bool");
-                type = Type::errorType;
+                /* unary not */
+                if (strcmp(op->getOp(), "!") != 0)
+                {
+                        ReportError::Formatted(location,
+                                        "Weird unary error");
+                        type = Type::errorType;
+                        return;
+                }
+
+                if (right->getType() != Type::boolType)
+                {
+                        ReportError::Formatted(op->GetLocation(),
+                                        "Incompatible operand: ! %s",
+                                        right->getType()->getTypeName());
+                        type = Type::errorType;
+                        return;
+                }
         }
         else
         {
-                type = Type::boolType;
+                if (left->getType() != Type::boolType ||
+                                right->getType() != Type::boolType)
+                {
+                        ReportError::Formatted(op->GetLocation(),
+                                        "Incompatible operands: %s %s %s",
+                                        left->getType()->getTypeName(),
+                                        op->getOp(),
+                                        right->getType()->getTypeName());
+                        type = Type::errorType;
+                        return;
+                }
         }
+
+        type = Type::boolType;
 }
 
 void EqualityExpr::Check() {
