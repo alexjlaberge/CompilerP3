@@ -135,11 +135,14 @@ void PrintStmt::Check() {
 
         while (i < args->NumElements())
         {
-                size_t hash = typeid(*(args->Nth(i))).hash_code();
-                if (hash == typeid(DoubleConstant).hash_code())
+                const Type *t = args->Nth(i)->getType();
+                if (t != Type::intType && t != Type::boolType &&
+                                t != Type::stringType)
                 {
-                        cout << "AAHHHH error" << endl;
-                        /* TODO ERROR */
+                        ReportError::Formatted(args->Nth(i)->GetLocation(),
+                                        "Incompatible argument %d: %s given, int/bool/string expected",
+                                        i + 1,
+                                        t->getTypeName());
                 }
                 i++;
         }
