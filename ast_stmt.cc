@@ -182,7 +182,6 @@ void SwitchStmt::Check() {
 
 void ConditionalStmt::Check() {
         test->Check();
-        printf("checking");
         if(strcmp(test->getType()->getTypeName(), "bool"))
         {
             ReportError::Formatted(location, "Test expression must have boolean type");//Error
