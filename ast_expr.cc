@@ -416,6 +416,7 @@ void Operator::Check() {
 
 void Call::Check() {
         int i = 0;
+        const FnDecl *fn = nullptr;
 
         if (base != nullptr)
         {
@@ -454,7 +455,7 @@ void Call::Check() {
 
                 field->Check();
 
-                const Decl *fn = cls->getVariable(field->GetName());
+                fn = dynamic_cast<const FnDecl*>(cls->getVariable(field->GetName()));
                 if (fn == nullptr)
                 {
                         ReportError::Formatted(field->GetLocation(),
@@ -470,7 +471,7 @@ void Call::Check() {
         }
         else
         {
-                const Decl *fn = parent->getVariable(field->GetName());
+                fn = dynamic_cast<const FnDecl*>(parent->getVariable(field->GetName()));
                 if (fn == nullptr)
                 {
                         ReportError::Formatted(field->GetLocation(),
@@ -484,9 +485,30 @@ void Call::Check() {
                 }
         }
 
+        if (actuals->NumElements() != fn->NumFormals())
+        {
+                ReportError::Formatted(field->GetLocation(),
+                                "Function '%s' expects %d arguments but %d given",
+                                field->GetName(),
+                                fn->NumFormals(),
+                                actuals->NumElements());
+                type = Type::errorType;
+                return;
+        }
+
         while (i < actuals->NumElements())
         {
                 actuals->Nth(i)->Check();
+                if (actuals->Nth(i)->getType()->operator!=(fn->formalType(i)))
+                {
+                        ReportError::Formatted(actuals->Nth(i)->GetLocation(),
+                                        "Incompatible argument %d: %s given, %s expected",
+                                        i + 1,
+                                        actuals->Nth(i)->getType()->getTypeName(),
+                                        fn->formalType(i)->getTypeName());
+                        type = Type::errorType;
+                        return;
+                }
                 i++;
         }
 }

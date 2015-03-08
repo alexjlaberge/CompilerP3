@@ -189,3 +189,13 @@ const ClassDecl *FnDecl::getThis() const
 {
         return parent->getThis();
 }
+
+const Type *FnDecl::formalType(int i) const
+{
+        return formals->Nth(i)->getType();
+}
+
+int FnDecl::NumFormals() const
+{
+        return formals->NumElements();
+}

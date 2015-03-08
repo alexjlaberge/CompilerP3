@@ -91,6 +91,10 @@ class FnDecl : public Decl
     Type* getType() const {return returnType;}
     bool isFn() {return true;}
 
+    /* Get the type for the ith formal */
+    const Type *formalType(int i) const;
+    int NumFormals() const;
+
     virtual const Decl *getVariable(const char *name) const;
     virtual const ClassDecl *getThis() const;
 };
