@@ -60,8 +60,9 @@ class ArrayType : public Type
     const char *GetPrintNameForNode() { return "ArrayType"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
-    const char *getTypeName() const {
-      const char* a = elemType->getTypeName(); strcat((char*)a, (const char*)"[]"); return a;}
+    const char *getTypeName() const;
+
+    Type *getBaseType() const;
 };
 
  

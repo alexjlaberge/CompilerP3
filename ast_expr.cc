@@ -9,6 +9,9 @@
 #include "errors.h"
 #include "symbols.h"
 #include <cassert>
+#include <iostream>
+
+using namespace std;
 
 #define compound_expr_return_if_errors() \
     if ((left != nullptr && left->getType() == Type::errorType) || \
@@ -140,7 +143,8 @@ void NewExpr::PrintChildren(int indentLevel) {
 NewArrayExpr::NewArrayExpr(yyltype loc, Expr *sz, Type *et) : Expr(loc) {
     Assert(sz != NULL && et != NULL);
     (size=sz)->SetParent(this); 
-    (elemType=et)->SetParent(this);
+    elemType = new ArrayType(loc, et);
+    elemType->SetParent(this);
 }
 
 void NewArrayExpr::PrintChildren(int indentLevel) {
@@ -396,16 +400,25 @@ void ArrayAccess::Check() {
         base->Check();
         subscript->Check();
 
+        const ArrayType *t = dynamic_cast<const ArrayType*>(base->getType());
+        if (t == nullptr)
+        {
+                ReportError::Formatted(base->GetLocation(),
+                                "[] can only be applied to arrays");
+                type = Type::errorType;
+                return;
+        }
+
         if (subscript->getType() != Type::intType)
         {
                 ReportError::Formatted(subscript->GetLocation(),
-                                "Array subscript must be an integer, not %s",
+                                "Array subscript must be an integer",
                                 subscript->getType()->getTypeName());
                 type = Type::errorType;
         }
         else
         {
-                type = base->getType();
+                type = t->getBaseType();
         }
 }
 
@@ -516,7 +529,7 @@ void Call::Check() {
 void NewArrayExpr::Check() {
         if(size->getType()->operator!=(Type::intType))
         {
-            ReportError::Formatted(location,
+            ReportError::Formatted(size->GetLocation(),
                                         "Size for NewArray must be an integer");
             type = Type::errorType;
         }

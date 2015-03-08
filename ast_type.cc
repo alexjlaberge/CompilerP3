@@ -89,3 +89,15 @@ bool Type::operator!=(const Type *rhs) const
 {
         return (strcmp(getTypeName(), rhs->getTypeName()) != 0);
 }
+
+const char *ArrayType::getTypeName() const
+{
+      string name = string(elemType->getTypeName());
+      name += "[]";
+      return strdup(name.c_str());
+}
+
+Type *ArrayType::getBaseType() const
+{
+        return elemType;
+}
