@@ -6,6 +6,6 @@ Cow main()
 {
 	Cow a;
 	int c;
-	c = a.b;
+	c = a.c;
 	return 1;
 }
