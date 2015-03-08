@@ -179,3 +179,13 @@ const Decl * VarDecl::getVariable(const char *name) const
 {
         return parent->getVariable(name);
 }
+
+const ClassDecl *ClassDecl::getThis() const
+{
+        return this;
+}
+
+const ClassDecl *FnDecl::getThis() const
+{
+        return parent->getThis();
+}

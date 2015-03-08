@@ -446,6 +446,15 @@ void NullConstant::Check() {
 }
 
 void This::Check() {
+        if (parent->getThis() == nullptr)
+        {
+                ReportError::Formatted(location,
+                                "'this' used outside of class function");
+        }
+        else
+        {
+                type = parent->getThis()->getType();
+        }
 }
 
 void ReadIntegerExpr::Check() {
@@ -498,4 +507,9 @@ const Decl *FieldAccess::getVariable(const char *name) const
 const Decl *Call::getVariable(const char *name) const
 {
         return parent->getVariable(name);
+}
+
+const ClassDecl *Expr::getThis() const
+{
+        return parent->getThis();
 }

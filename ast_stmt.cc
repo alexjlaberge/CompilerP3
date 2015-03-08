@@ -255,3 +255,8 @@ const Decl *Stmt::getVariable(const char *name) const
 {
         return parent->getVariable(name);
 }
+
+const ClassDecl *Stmt::getThis() const
+{
+        return parent->getThis();
+}

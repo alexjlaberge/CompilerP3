@@ -22,6 +22,8 @@ class Expr : public Stmt
     Expr() : Stmt() {}
     Type *type;
     virtual Type* getType() {return type;}
+
+    virtual const ClassDecl *getThis() const;
 };
 
 /* This node type is used for those places where an expression is optional.
