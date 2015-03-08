@@ -160,6 +160,12 @@ const Decl * ClassDecl::getVariable(const char *name) const
                 }
         }
 
+        const ClassDecl *super = dynamic_cast<const ClassDecl*>(parent->getVariable(extends->getTypeName()));
+        if (super != nullptr)
+        {
+                return super->getVariable(name);
+        }
+
         return parent->getVariable(name);
 }
 
