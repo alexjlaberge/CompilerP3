@@ -1,0 +1,11 @@
+class Cow {
+	int c;
+}
+
+Cow main()
+{
+	Cow a;
+	int c;
+	c = a.b;
+	return 1;
+}

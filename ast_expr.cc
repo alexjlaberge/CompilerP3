@@ -296,11 +296,26 @@ void EqualityExpr::Check() {
 void FieldAccess::Check() {
 
         //std::cout << "Found " << field->GetName() << " at " << scoped_variables.Lookup(field->GetName()) << std::endl;
-
+        //std::cout << "Awe Yee" << std::flush;
         if (base != nullptr)
         {
                 /* This is the case where it's classname.methodname */
                 base->Check();
+                Type* t = base->getType();
+                const Decl* c = declared_classes.Lookup(t->getTypeName());
+                const Decl* var = c->getVariable(c->getName());
+                std::cout << t->getTypeName() << std::flush;
+                if(var == nullptr)
+                {
+                        ReportError::Formatted(location,
+                                        "No declaration found for variable '%s'",
+                                        field->GetName());
+                        type = Type::errorType;
+                }
+                else
+                {
+                        type = var->getType();
+                }
                 /* TODO Check for base == 'this' */
         }
         else
