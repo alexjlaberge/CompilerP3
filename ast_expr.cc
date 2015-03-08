@@ -312,7 +312,7 @@ void FieldAccess::Check() {
 
                 const Decl *cls = parent->getVariable(base->getType()->getTypeName());
                 const Decl *var = cls->getVariable(field->GetName());
-                std::cout << base->getType()->getTypeName() << std::endl;
+                //std::cout << base->getType()->getTypeName() << std::endl;
                 if (var == nullptr)
                 {
                         ReportError::Formatted(location,
