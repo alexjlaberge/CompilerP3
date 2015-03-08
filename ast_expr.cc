@@ -386,7 +386,8 @@ void FieldAccess::Check() {
                                         field->GetName());
                         type = Type::errorType;
                 }
-                else if(dynamic_cast<const VarDecl*>(var) != nullptr)
+                else if(getThis() == nullptr &&
+                                dynamic_cast<const VarDecl*>(var) != nullptr)
                 {
                         ReportError::Formatted(field->GetLocation(),
                                         "%s field '%s' only accessible within class scope",
