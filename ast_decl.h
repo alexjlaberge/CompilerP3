@@ -88,7 +88,8 @@ class FnDecl : public Decl
     const char *GetPrintNameForNode() { return "FnDecl"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
-    virtual Type* getType() const {return returnType;}
+    Type* getType() const {return returnType;}
+    bool isFn() {return true;}
 
     virtual const Decl *getVariable(const char *name) const;
     virtual const ClassDecl *getThis() const;

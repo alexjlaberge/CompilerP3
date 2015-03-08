@@ -159,18 +159,6 @@ void PostfixExpr::PrintChildren(int indentLevel) {
     op->Print(indentLevel+1);
 }
 
-void BreakStmt::Check() {
-//Check that it is within the scope of a while or for loop
-    Node* p = parent;
-    while(p != nullptr)
-    {    if(p->isBreakable())
-            return;
-         else
-            p = p->GetParent();
-    }
-    ReportError::Formatted(location, "break is only allowed inside a loop");
-}
-
 void DoubleConstant::Check() {
 
 }
@@ -302,9 +290,6 @@ void EqualityExpr::Check() {
 }
 
 void FieldAccess::Check() {
-
-        //std::cout << "Found " << field->GetName() << " at " << scoped_variables.Lookup(field->GetName()) << std::endl;
-        //std::cout << "Awe Yee " << field->GetName() << std::endl<<std::flush;
         if (base != nullptr)
         {
                 base->Check();

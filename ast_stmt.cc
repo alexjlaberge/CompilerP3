@@ -153,6 +153,17 @@ void PrintStmt::Check() {
         }
 }
 
+void BreakStmt::Check() { //DONE
+    Node* p = parent;
+    while(p != nullptr)
+    {    if(p->isBreakable())
+            return;
+         else
+            p = p->GetParent();
+    }
+    ReportError::Formatted(location, "break is only allowed inside a loop");
+}
+
 Case::Case(IntConstant *v, List<Stmt*> *s) {
     Assert(s != NULL);
     value = v;
@@ -224,6 +235,24 @@ void ReturnStmt::Check() {
         expr->setLevel(level);
         expr->Check(); //Evaluate to same type as Fn
         Type* t = expr->getType();
+        
+        Node* p = parent;
+        while(p != nullptr)
+        {    if(p->isFn())
+             {
+                if(((FnDecl*)p)->getType() == t)
+                {
+                    return;
+                }
+                else
+                {
+                    ReportError::Formatted(location, "Incompatible return: %s given, %s expected", t->getTypeName(), ((FnDecl*)p)->getType()->getTypeName());
+                    return;
+                }
+             }   //Check if type is the same == 
+             else
+                p = p->GetParent();
+        }
         //Check that it matches fn type.
 }
 

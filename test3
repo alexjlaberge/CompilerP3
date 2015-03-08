@@ -2,8 +2,9 @@ int main()
 {
 	while(true)
 	{
-		break;
+		{
+			break;
+		}
 	}
-	break;
-	return 1;
+	return 2.0;
 }
