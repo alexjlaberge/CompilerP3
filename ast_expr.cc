@@ -374,7 +374,7 @@ void FieldAccess::Check() {
         else
         {
                 /* this is the case where it's varname op */
-                const Decl *var = getVariable(field->GetName());
+                const VarDecl *var = dynamic_cast<const VarDecl*>(getVariable(field->GetName()));
 
                 field->Check();
 
