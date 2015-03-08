@@ -53,8 +53,6 @@ class Node
     void SetParent(Node *p)  { parent = p; }
     Node *GetParent()        { return parent; }
     virtual bool isBreakable() {return false;}
-    virtual bool isFn() {return false;}
-    virtual Type* getType() {return nullptr;}
 
     virtual const char *GetPrintNameForNode() = 0;
     

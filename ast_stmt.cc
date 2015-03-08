@@ -243,25 +243,6 @@ void ReturnStmt::Check() {
         expr->Check();
         Type* t = expr->getType();
         
-        Node* p = parent;
-        while(p != nullptr)
-        {    if(p->isFn())
-             {
-                if(((FnDecl*)p)->getType() == t)
-                {
-                    return;
-                }
-                else
-                {
-                    ReportError::Formatted(location, "Incompatible return: %s given, %s expected", t->getTypeName(), ((FnDecl*)p)->getType()->getTypeName());
-                    return;
-                }
-             }   //Check if type is the same == 
-             else
-                p = p->GetParent();
-        }
-        //Check that it matches fn type.
-
         Node *par = this;
         FnDecl *fn = nullptr;
         while (true)
