@@ -127,12 +127,13 @@ class ArithmeticExpr : public CompoundExpr
     ArithmeticExpr(Operator *op, Expr *rhs) : CompoundExpr(op,rhs) {}
     const char *GetPrintNameForNode() { return "ArithmeticExpr"; }
     virtual void Check();
+    virtual Type* getType();
 };
 
 class RelationalExpr : public CompoundExpr 
 {
   public:
-    RelationalExpr(Expr *lhs, Operator *op, Expr *rhs) : CompoundExpr(lhs,op,rhs) {}
+    RelationalExpr(Expr *lhs, Operator *op, Expr *rhs) : CompoundExpr(lhs,op,rhs) {type = Type::boolType;}
     const char *GetPrintNameForNode() { return "RelationalExpr"; }
     virtual void Check();
 };
@@ -140,7 +141,7 @@ class RelationalExpr : public CompoundExpr
 class EqualityExpr : public CompoundExpr 
 {
   public:
-    EqualityExpr(Expr *lhs, Operator *op, Expr *rhs) : CompoundExpr(lhs,op,rhs) {}
+    EqualityExpr(Expr *lhs, Operator *op, Expr *rhs) : CompoundExpr(lhs,op,rhs) {type = Type::boolType;}
     const char *GetPrintNameForNode() { return "EqualityExpr"; }
     virtual void Check();
 };
@@ -148,8 +149,8 @@ class EqualityExpr : public CompoundExpr
 class LogicalExpr : public CompoundExpr 
 {
   public:
-    LogicalExpr(Expr *lhs, Operator *op, Expr *rhs) : CompoundExpr(lhs,op,rhs) {}
-    LogicalExpr(Operator *op, Expr *rhs) : CompoundExpr(op,rhs) {}
+    LogicalExpr(Expr *lhs, Operator *op, Expr *rhs) : CompoundExpr(lhs,op,rhs) {type = Type::boolType;}
+    LogicalExpr(Operator *op, Expr *rhs) : CompoundExpr(op,rhs) {type = Type::boolType;}
     const char *GetPrintNameForNode() { return "LogicalExpr"; }
     virtual void Check();
 };
@@ -166,7 +167,8 @@ class LValue : public Expr
 {
   public:
     LValue(yyltype loc) : Expr(loc) {}
-    virtual void Check();
+    //virtual void Check();
+    //virtual Type* getType();
 };
 
 class This : public Expr 
@@ -175,6 +177,7 @@ class This : public Expr
     This(yyltype loc) : Expr(loc) {}
     const char *GetPrintNameForNode() { return "This"; }
     virtual void Check();
+    virtual Type* getType();
 };
 
 class ArrayAccess : public LValue 
@@ -187,6 +190,7 @@ class ArrayAccess : public LValue
     const char *GetPrintNameForNode() { return "ArrayAccess"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+    virtual Type* getType();
 };
 
 /* Note that field access is used both for qualified names
@@ -207,6 +211,7 @@ class FieldAccess : public LValue
     virtual void Check();
 
     virtual const Decl *getVariable(const char *name) const;
+    virtual Type* getType();
 };
 
 /* Like field access, call is used both for qualified base.field()
@@ -227,6 +232,7 @@ class Call : public Expr
     virtual void Check();
     bool isCall(){return true;}
     virtual const Decl *getVariable(const char *name) const;
+    virtual Type *getType();
 };
 
 class NewExpr : public Expr
@@ -239,6 +245,7 @@ class NewExpr : public Expr
     const char *GetPrintNameForNode() { return "NewExpr"; }
     void PrintChildren(int indentLevel);
     virtual void Check();
+    virtual Type *getType();
 };
 
 class NewArrayExpr : public Expr
@@ -257,7 +264,7 @@ class NewArrayExpr : public Expr
 class ReadIntegerExpr : public Expr
 {
   public:
-    ReadIntegerExpr(yyltype loc) : Expr(loc) {}
+    ReadIntegerExpr(yyltype loc) : Expr(loc) {type = Type::intType;}
     const char *GetPrintNameForNode() { return "ReadIntegerExpr"; }
     virtual void Check();
 };
@@ -265,7 +272,7 @@ class ReadIntegerExpr : public Expr
 class ReadLineExpr : public Expr
 {
   public:
-    ReadLineExpr(yyltype loc) : Expr (loc) {}
+    ReadLineExpr(yyltype loc) : Expr (loc) {type = Type::stringType;}
     const char *GetPrintNameForNode() { return "ReadLineExpr"; }
     virtual void Check();
 };

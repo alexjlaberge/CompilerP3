@@ -14,12 +14,14 @@
 using namespace std;
 
 #define compound_expr_return_if_errors() \
-    if ((left != nullptr && left->getType() == Type::errorType) || \
-                    right->getType() == Type::errorType) \
-    { \
-            type = Type::errorType; \
-            return; \
-    }
+        assert(right->getType()); \
+        if (left != nullptr) assert(left->getType()); \
+        if ((left != nullptr && left->getType() == Type::errorType) || \
+                        right->getType() == Type::errorType) \
+        { \
+                type = Type::errorType; \
+                return; \
+        }
 
 #define type_assert(expr) \
         if (!expr) { \
@@ -145,6 +147,7 @@ NewArrayExpr::NewArrayExpr(yyltype loc, Expr *sz, Type *et) : Expr(loc) {
     (size=sz)->SetParent(this); 
     elemType = new ArrayType(loc, et);
     elemType->SetParent(this);
+    type = elemType;
 }
 
 void NewArrayExpr::PrintChildren(int indentLevel) {
@@ -192,6 +195,24 @@ void CompoundExpr::Check() {
         right->Check();
 }
 
+Type *ArithmeticExpr::getType() {
+        if (type != nullptr)
+        {
+                return type;
+        }
+
+        if (left != nullptr && left->getType()->operator!=(right->getType()))
+        {
+                type = Type::errorType;
+        }
+        else
+        {
+                type = right->getType();
+        }
+
+        return type;
+}
+
 void ArithmeticExpr::Check() {
         CompoundExpr::Check();
         compound_expr_return_if_errors();
@@ -206,17 +227,7 @@ void ArithmeticExpr::Check() {
                 return;
         }
 
-        if (left == nullptr)
-        {
-                if (strcmp(op->getOp(), "-") != 0)
-                {
-                        ReportError::Formatted(op->GetLocation(),
-                                        "Bad operator");
-                        type = Type::errorType;
-                        return;
-                }
-        }
-        else
+        if (left != nullptr)
         {
                 if (left->getType() != Type::intType &&
                                 left->getType() != Type::doubleType)
@@ -239,9 +250,6 @@ void ArithmeticExpr::Check() {
                         return;
                 }
         }
-
-        type = right->getType();
-
 }
 
 void RelationalExpr::Check() {
@@ -314,12 +322,10 @@ void LogicalExpr::Check() {
                                         left->getType()->getTypeName(),
                                         op->getOp(),
                                         right->getType()->getTypeName());
-                        type = Type::errorType;
+                        //type = Type::errorType;
                         return;
                 }
         }
-
-        type = Type::boolType;
 }
 
 void EqualityExpr::Check() {
@@ -364,11 +370,62 @@ void EqualityExpr::Check() {
         type = Type::boolType;
 }
 
+Type *FieldAccess::getType() {
+        if (type != nullptr)
+        {
+                return type;
+        }
+
+        if (base != nullptr)
+        {
+                const Decl *cls = parent->getVariable(base->getType()->getTypeName());
+                const Decl *var = nullptr;
+
+                if (cls != nullptr)
+                {
+                        var = cls->getVariable(field->GetName());
+                }
+                else
+                {
+                        var = getVariable(field->GetName());
+                }
+
+                if (var == nullptr)
+                {
+                        type = Type::errorType;
+                }
+                else if(getThis() == nullptr &&
+                                dynamic_cast<const VarDecl*>(var) != nullptr)
+                {
+                        type = Type::errorType;
+                }
+                else
+                {
+                        type = var->getType();
+                }
+        }
+        else
+        {
+                const VarDecl *var = dynamic_cast<const VarDecl*>(getVariable(field->GetName()));
+
+                if(var == nullptr)
+                {
+                        type = Type::errorType;
+                }
+                else
+                {
+                        type = var->getType();
+                }
+        }
+
+        assert(type);
+        return type;
+}
+
 void FieldAccess::Check() {
         if (base != nullptr)
         {
                 /* this is the classname.functionname variant */
-
                 base->Check();
                 field->Check();
 
@@ -427,6 +484,25 @@ void FieldAccess::Check() {
         }
 }
 
+Type *ArrayAccess::getType() {
+        if (type != nullptr)
+        {
+                return type;
+        }
+
+        const ArrayType *t = dynamic_cast<const ArrayType*>(base->getType());
+        if (t == nullptr)
+        {
+                type = Type::errorType;
+        }
+        else
+        {
+                type = t->getBaseType();
+        }
+
+        return type;
+}
+
 void ArrayAccess::Check() {
         base->Check();
         subscript->Check();
@@ -456,6 +532,55 @@ void ArrayAccess::Check() {
 void Operator::Check() {
         /* char tokenString[4] */
         /* TODO Check tokenString is actually an operator ? */
+}
+
+Type *Call::getType() {
+        if (type != nullptr)
+        {
+                return type;
+        }
+
+        const FnDecl *fn = nullptr;
+
+        if (base != nullptr)
+        {
+                const Decl *cls = parent->getVariable(base->getType()->getTypeName());
+                if (cls == nullptr)
+                {
+                        type = Type::errorType;
+                }
+                else
+                {
+                        fn = dynamic_cast<const FnDecl*>(cls->getVariable(field->GetName()));
+                        if (fn == nullptr)
+                        {
+                                type = Type::errorType;
+                        }
+                        else
+                        {
+                                type = fn->getType();
+                        }
+                }
+        }
+        else
+        {
+                fn = dynamic_cast<const FnDecl*>(parent->getVariable(field->GetName()));
+                if (fn == nullptr)
+                {
+                        type = Type::errorType;
+                }
+                else
+                {
+                        type = fn->getType();
+                }
+        }
+
+        if (fn == nullptr)
+        {
+                type = Type::errorType;
+        }
+
+        return type;
 }
 
 void Call::Check() {
@@ -618,16 +743,30 @@ void NullConstant::Check() {
     type = Type::nullType;
 }
 
-void This::Check() {
+Type *This::getType()
+{
+        if (type != nullptr)
+        {
+                return type;
+        }
+
         if (parent->getThis() == nullptr)
         {
-                ReportError::Formatted(location,
-                                "'this' is only valid within class scope");
                 type = Type::errorType;
         }
         else
         {
                 type = parent->getThis()->getType();
+        }
+
+        return type;
+}
+
+void This::Check() {
+        if (getType() == Type::errorType)
+        {
+                ReportError::Formatted(location,
+                                "'this' is only valid within class scope");
         }
 }
 
@@ -643,12 +782,28 @@ void EmptyExpr::Check() {
         type = nullptr;
 }
 
-void LValue::Check() {
+Type *NewExpr::getType() {
+        if (type != nullptr)
+        {
+                return type;
+        }
+
+        const ClassDecl *cls = dynamic_cast<const ClassDecl*>(
+                        parent->getVariable(cType->getTypeName()));
+        if (cls == nullptr)
+        {
+                type = Type::errorType;
+        }
+        else
+        {
+                type = cType;
+        }
+
+        return type;
 }
 
 void AssignExpr::Check() {
-        CompoundExpr::Check();
-        compound_expr_return_if_errors();
+        left->Check();
 
         if(right->getType()->operator!=(left->getType()) &&
                         !right->getType()->isDescendedFrom(left->getType()))
@@ -663,7 +818,8 @@ void AssignExpr::Check() {
                                 right->getType()->getTypeName());
                     }
                 }
-                else
+                else if (right->getType() != Type::errorType &&
+                                left->getType() != Type::errorType)
                 {
                     ReportError::Formatted(op->GetLocation(),
                                 "Incompatible operands: %s = %s",
@@ -671,6 +827,8 @@ void AssignExpr::Check() {
                                 right->getType()->getTypeName());
                 }
         }
+
+        right->Check();
 }
 
 const Decl *CompoundExpr::getVariable(const char *name) const
