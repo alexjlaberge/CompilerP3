@@ -130,10 +130,8 @@ void Decl::Check() {
 
 void VarDecl::Check() {
         Decl::Check();
+
         type->Check();
-        //scoped_variables.emplace((char*)id->GetName(), getLevel());
-        //std::cout << "Entering " << id->GetName() << " at " << getLevel() << std::endl; 
-        //std::cout << id->GetName() << " " << getLevel() << std::endl;
 }
 
 void ClassDecl::Check() {
@@ -148,12 +146,7 @@ void ClassDecl::Check() {
 
         if (extends != nullptr)
         {
-                if (parent->getVariable(extends->getTypeName()) == nullptr)
-                {
-                        ReportError::Formatted(extends->GetLocation(),
-                                        "No declaration found for class '%s'",
-                                        extends->getTypeName());
-                }
+                extends->Check();
         }
 
         while (i < members->NumElements())

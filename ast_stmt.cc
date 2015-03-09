@@ -242,7 +242,11 @@ void IfStmt::Check() {
 void ReturnStmt::Check() {
         expr->setLevel(level);
         expr->Check();
-        Type* t = expr->getType();
+        const Type* t = expr->getType();
+        if (t == nullptr)
+        {
+                t = Type::voidType;
+        }
         
         Node *par = this;
         FnDecl *fn = nullptr;

@@ -41,7 +41,13 @@ void Type::Check()
                 return;
         }
 
-        if (!type_exists(typeName))
+        if (strcmp(typeName, "int") != 0 &&
+                        strcmp(typeName, "double") != 0 &&
+                        strcmp(typeName, "string") != 0 &&
+                        strcmp(typeName, "bool") != 0 &&
+                        strcmp(typeName, "error") != 0 &&
+                        strcmp(typeName, "null") != 0 &&
+                        strcmp(typeName, "void") != 0)
         {
                 ReportError::Formatted(location,
                                 "No declaration found for type '%s'",
@@ -60,11 +66,29 @@ NamedType::NamedType(Identifier *i) : Type(*i->GetLocation()) {
 
 void NamedType::Check()
 {
-        if (parent->getVariable(id->GetName()) == nullptr)
+        const Decl *par = getVariable(id->GetName());
+        if (par == nullptr)
+        {
+                if (dynamic_cast<VarDecl*>(parent) != nullptr)
+                {
+                        ReportError::Formatted(location,
+                                        "No declaration found for type '%s'",
+                                        id->GetName());
+                        return;
+                }
+                ReportError::Formatted(location,
+                                "No declaration found for class '%s'",
+                                id->GetName());
+                return;
+        }
+
+        if (dynamic_cast<const ClassDecl*>(par) == nullptr &&
+                        dynamic_cast<const InterfaceDecl*>(par) == nullptr)
         {
                 ReportError::Formatted(location,
-                                "No declaration found for type '%s'",
+                                "No declaration found for class '%s'",
                                 id->GetName());
+                return;
         }
 }
 
@@ -82,6 +106,7 @@ void ArrayType::PrintChildren(int indentLevel) {
 }
 
 void ArrayType::Check() {
+        elemType->Check();
 }
 
 bool NamedType::IsDeclared() {
@@ -116,4 +141,9 @@ bool NamedType::isDescendedFrom(const Type *other) const
         }
 
         return me->descendedFrom(par->getName());
+}
+
+const Decl *Type::getVariable(const char *name) const
+{
+        return parent->getVariable(name);
 }

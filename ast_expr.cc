@@ -581,18 +581,20 @@ void NewArrayExpr::Check() {
                                         "Size for NewArray must be an integer");
             type = Type::errorType;
         }
+
         elemType->Check();
+        const ArrayType *t = dynamic_cast<const ArrayType*>(elemType);
+        assert(t);
+        const Type *bt = t->getBaseType();
+
         type = elemType;
 }
 
 void NewExpr::Check() {
         const Decl *cls = parent->getVariable(cType->getTypeName());
-
+        cType->Check();
         if (cls == nullptr)
         {
-                ReportError::Formatted(cType->GetLocation(),
-                                "No declaration found for class '%s'",
-                                cType->GetId()->GetName());
                 type = Type::errorType;
         }
         else

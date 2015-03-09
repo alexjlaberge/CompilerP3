@@ -33,6 +33,7 @@ class Type : public Node
     virtual bool operator!=(const Type *rhs) const;
     virtual bool isDescendedFrom(const Type *other) const { return false; }
     virtual bool isBasicType() const {return true;}
+    virtual const Decl *getVariable(const char *name) const;
 };
 
 class NamedType : public Type 
