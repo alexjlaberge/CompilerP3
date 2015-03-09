@@ -214,77 +214,68 @@ Type *ArithmeticExpr::getType() {
 }
 
 void ArithmeticExpr::Check() {
-        CompoundExpr::Check();
-        compound_expr_return_if_errors();
+        //CompoundExpr::Check();
+        //compound_expr_return_if_errors();
 
-        if (right->getType() != Type::intType &&
+        if (left != nullptr)
+        {
+                left->Check();
+
+                if (left->getType()->operator!=(right->getType()) ||
+                                (left->getType() != Type::intType &&
+                                 left->getType() != Type::doubleType))
+                {
+                        if (left->getType() != Type::errorType &&
+                                        right->getType() != Type::errorType)
+                        {
+                                ReportError::Formatted(op->GetLocation(),
+                                                "Incompatible operands: %s %s %s",
+                                                left->getType()->getTypeName(),
+                                                op->getOp(),
+                                                right->getType()->getTypeName());
+                        }
+                        type = Type::errorType;
+                }
+        }
+
+        right->Check();
+        if (type != Type::errorType && right->getType() != Type::intType &&
                         right->getType() != Type::doubleType)
         {
                 ReportError::Formatted(right->GetLocation(),
                                 "%s where int/double expected",
                                 right->getType()->getTypeName());
                 type = Type::errorType;
-                return;
         }
-
-        if (left != nullptr)
+        else
         {
-                if (left->getType() != Type::intType &&
-                                left->getType() != Type::doubleType)
-                {
-                        ReportError::Formatted(left->GetLocation(),
-                                        "%s where int/double expected",
-                                        left->getType()->getTypeName());
-                        type = Type::errorType;
-                        return;
-                }
-
-                if (left->getType()->operator!=(right->getType()))
-                {
-                        ReportError::Formatted(op->GetLocation(),
-                                        "Incompatible operands: %s %s %s",
-                                        left->getType()->getTypeName(),
-                                        op->getOp(),
-                                        right->getType()->getTypeName());
-                        type = Type::errorType;
-                        return;
-                }
+                type = right->getType();
         }
 }
 
 void RelationalExpr::Check() {
         left->Check();
         op->Check();
-        right->Check();
 
         assert(left->getType());
         assert(right->getType());
 
-        if (left->getType() == Type::errorType ||
-                        right->getType() == Type::errorType)
+        if (left->getType()->operator!=(right->getType()) ||
+                        (left->getType() != Type::intType &&
+                         left->getType() != Type::doubleType))
         {
-                type = Type::errorType;
+                if (left->getType() != Type::errorType &&
+                                right->getType() != Type::errorType)
+                {
+                        ReportError::Formatted(op->GetLocation(),
+                                        "Incompatible operands: %s %s %s",
+                                        left->getType()->getTypeName(),
+                                        op->getOp(),
+                                        right->getType()->getTypeName());
+                }
         }
-        else if (left->getType()->operator!=(right->getType()))
-        {
-                ReportError::Formatted(op->GetLocation(),
-                                "Incompatible operands: %s %s %s",
-                                left->getType()->getTypeName(),
-                                op->getOp(),
-                                right->getType()->getTypeName());
-                type = Type::errorType;
-        }
-        else if(left->getType()->operator!=(Type::intType) &&
-                        left->getType()->operator!=(Type::doubleType))
-        {
-                ReportError::Formatted(location,
-                                "Must compare numbers");
-                type = Type::errorType;
-        }
-        else
-        {
-                type = Type::boolType;
-        }
+
+        right->Check();
 }
 
 void LogicalExpr::Check() {
@@ -339,8 +330,22 @@ void EqualityExpr::Check() {
         {
                 ReportError::Formatted(left->GetLocation(),
                                 "Operand must be numerical");
-                type = Type::errorType;
+                //type = Type::errorType;
                 return;
+        }
+
+        if (left->getType()->operator!=(right->getType()))
+        {
+                if (left->getType()->isBasicType() || right->getType() != Type::nullType)
+                {
+                        ReportError::Formatted(op->GetLocation(),
+                                        "Incompatible operands: %s %s %s",
+                                        left->getType()->getTypeName(),
+                                        op->getOp(),
+                                        right->getType()->getTypeName());
+                        //type = Type::errorType;
+                        return;
+                }
         }
 
         if (right->getType() != Type::intType &&
@@ -350,21 +355,8 @@ void EqualityExpr::Check() {
         {
                 ReportError::Formatted(right->GetLocation(),
                                 "Operand must be numerical");
-                type = Type::errorType;
+                //type = Type::errorType;
                 return;
-        }
-
-        if (left->getType()->operator!=(right->getType()))
-        {
-                if (left->getType()->isBasicType() || right->getType() != Type::nullType)
-                {
-                        ReportError::Formatted(location,
-                                        "Operands %s and %s are not same type",
-                                        left->getType()->getTypeName(),
-                                        right->getType()->getTypeName());
-                        type = Type::errorType;
-                        return;
-                }
         }
 
         type = Type::boolType;
