@@ -327,7 +327,8 @@ void EqualityExpr::Check() {
         compound_expr_return_if_errors();
 
         if (left->getType() != Type::intType &&
-                        left->getType() != Type::doubleType)
+                        left->getType() != Type::doubleType &&
+                        left->getType()->isBasicType())
         {
                 ReportError::Formatted(left->GetLocation(),
                                 "Operand must be numerical");
@@ -336,7 +337,8 @@ void EqualityExpr::Check() {
         }
 
         if (right->getType() != Type::intType &&
-                        right->getType() != Type::doubleType)
+                        right->getType() != Type::doubleType &&
+                        right->getType()->isBasicType())
         {
                 ReportError::Formatted(right->GetLocation(),
                                 "Operand must be numerical");
