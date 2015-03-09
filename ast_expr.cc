@@ -338,7 +338,8 @@ void EqualityExpr::Check() {
 
         if (right->getType() != Type::intType &&
                         right->getType() != Type::doubleType &&
-                        right->getType()->isBasicType())
+                        right->getType()->isBasicType() &&
+                        right->getType() != Type::nullType)
         {
                 ReportError::Formatted(right->GetLocation(),
                                 "Operand must be numerical");
@@ -348,12 +349,15 @@ void EqualityExpr::Check() {
 
         if (left->getType()->operator!=(right->getType()))
         {
-                ReportError::Formatted(location,
-                                "Operands %s and %s are not same type",
-                                left->getType()->getTypeName(),
-                                right->getType()->getTypeName());
-                type = Type::errorType;
-                return;
+                if (left->getType()->isBasicType() || right->getType() != Type::nullType)
+                {
+                        ReportError::Formatted(location,
+                                        "Operands %s and %s are not same type",
+                                        left->getType()->getTypeName(),
+                                        right->getType()->getTypeName());
+                        type = Type::errorType;
+                        return;
+                }
         }
 
         type = Type::boolType;

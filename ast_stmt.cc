@@ -258,10 +258,13 @@ void ReturnStmt::Check() {
 
         if (fn->getType()->operator!=(t))
         {
-                ReportError::Formatted(expr->GetLocation(),
-                                "Incompatible return: %s given, %s expected",
-                                t->getTypeName(),
-                                fn->getType()->getTypeName());
+                if (fn->getType()->isBasicType() || t != Type::nullType)
+                {
+                        ReportError::Formatted(expr->GetLocation(),
+                                        "Incompatible return: %s given, %s expected",
+                                        t->getTypeName(),
+                                        fn->getType()->getTypeName());
+                }
         }
 }
 
