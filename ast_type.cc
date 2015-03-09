@@ -10,6 +10,7 @@
 #include "symbols.h"
 #include <cassert>
 #include <iostream>
+#include "ast_expr.h"
 
 using namespace std;
  
@@ -69,7 +70,8 @@ void NamedType::Check()
         const Decl *par = getVariable(id->GetName());
         if (par == nullptr)
         {
-                if (dynamic_cast<VarDecl*>(parent) != nullptr)
+                if (dynamic_cast<VarDecl*>(parent) != nullptr ||
+                                dynamic_cast<NewArrayExpr*>(parent) != nullptr)
                 {
                         ReportError::Formatted(location,
                                         "No declaration found for type '%s'",
@@ -85,6 +87,14 @@ void NamedType::Check()
         if (dynamic_cast<const ClassDecl*>(par) == nullptr &&
                         dynamic_cast<const InterfaceDecl*>(par) == nullptr)
         {
+                if (dynamic_cast<VarDecl*>(parent) != nullptr ||
+                                dynamic_cast<ArrayType*>(parent) != nullptr)
+                {
+                        ReportError::Formatted(location,
+                                        "No declaration found for type '%s'",
+                                        id->GetName());
+                        return;
+                }
                 ReportError::Formatted(location,
                                 "No declaration found for class '%s'",
                                 id->GetName());

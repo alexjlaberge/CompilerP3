@@ -591,14 +591,18 @@ void NewArrayExpr::Check() {
 }
 
 void NewExpr::Check() {
-        const Decl *cls = parent->getVariable(cType->getTypeName());
-        cType->Check();
+        const ClassDecl *cls = dynamic_cast<const ClassDecl*>(
+                        parent->getVariable(cType->getTypeName()));
         if (cls == nullptr)
         {
+                ReportError::Formatted(cType->GetLocation(),
+                                "No declaration found for class '%s'",
+                                cType->getTypeName());
                 type = Type::errorType;
         }
         else
         {
+                cType->Check();
                 type = cType;
         }
 }
