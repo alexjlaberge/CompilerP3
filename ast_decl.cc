@@ -162,11 +162,8 @@ void ClassDecl::Check() {
                 i++;
         }
 
-        i = 0;
-        while (i < implements->NumElements())
+        for (i = 0; i < implements->NumElements(); i++)
         {
-                implements->Nth(i)->Check();
-
                 const InterfaceDecl *iface =
                         dynamic_cast<const InterfaceDecl*>(
                                         parent->getVariable(implements->Nth(i)->getTypeName())
@@ -177,7 +174,7 @@ void ClassDecl::Check() {
                         ReportError::Formatted(implements->Nth(i)->GetLocation(),
                                         "No declaration found for interface '%s'",
                                         implements->Nth(i)->getTypeName());
-                        return;
+                        continue;
                 }
 
                 for (int j = 0; j < iface->numMembers(); j++)
@@ -237,8 +234,6 @@ void ClassDecl::Check() {
                                                 myFn->getName());
                         }
                 }
-
-                i++;
         }
 }
 
