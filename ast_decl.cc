@@ -148,7 +148,12 @@ void ClassDecl::Check() {
 
         if (extends != nullptr)
         {
-                extends->Check();
+                if (parent->getVariable(extends->getTypeName()) == nullptr)
+                {
+                        ReportError::Formatted(extends->GetLocation(),
+                                        "No declaration found for class '%s'",
+                                        extends->getTypeName());
+                }
         }
 
         while (i < members->NumElements())
@@ -170,7 +175,7 @@ void ClassDecl::Check() {
                 if (iface == nullptr)
                 {
                         ReportError::Formatted(implements->Nth(i)->GetLocation(),
-                                        "Can't find interface %s",
+                                        "No declaration found for interface '%s'",
                                         implements->Nth(i)->getTypeName());
                         return;
                 }
