@@ -1,0 +1,42 @@
+
+*** Error line 11.
+	f = (((a == c) < (b == c)) && ((a < b) + (c < b)));
+          ^
+*** Incompatible operands: string = bool
+
+
+*** Error line 11.
+	f = (((a == c) < (b == c)) && ((a < b) + (c < b)));
+                 ^^
+*** Incompatible operands: int == string
+
+
+*** Error line 11.
+	f = (((a == c) < (b == c)) && ((a < b) + (c < b)));
+                       ^
+*** Incompatible operands: bool < bool
+
+
+*** Error line 11.
+	f = (((a == c) < (b == c)) && ((a < b) + (c < b)));
+                            ^^
+*** Incompatible operands: double == string
+
+
+*** Error line 11.
+	f = (((a == c) < (b == c)) && ((a < b) + (c < b)));
+                                          ^
+*** Incompatible operands: int < double
+
+
+*** Error line 11.
+	f = (((a == c) < (b == c)) && ((a < b) + (c < b)));
+                                               ^
+*** Incompatible operands: bool + bool
+
+
+*** Error line 11.
+	f = (((a == c) < (b == c)) && ((a < b) + (c < b)));
+                                                    ^
+*** Incompatible operands: string < double
+

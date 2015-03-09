@@ -1,0 +1,13 @@
+int main()
+{
+
+	int a;
+	double b;
+	string c;
+	string f;
+	a = 2;
+	b = 3.0;
+	c = "a";
+	f = (((a == c) < (b == c)) && ((a < b) + (c < b)));
+	return 1;
+}
