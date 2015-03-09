@@ -259,9 +259,10 @@ void RelationalExpr::Check() {
         }
         else if (left->getType()->operator!=(right->getType()))
         {
-                ReportError::Formatted(location,
-                                "Cannot compare %s with %s",
+                ReportError::Formatted(op->GetLocation(),
+                                "Incompatible operands: %s %s %s",
                                 left->getType()->getTypeName(),
+                                op->getOp(),
                                 right->getType()->getTypeName());
                 type = Type::errorType;
         }
@@ -646,13 +647,8 @@ void LValue::Check() {
 }
 
 void AssignExpr::Check() {
-
-        left->setLevel(level);
-        right->setLevel(level);
         CompoundExpr::Check();
-
         compound_expr_return_if_errors();
-        assert(!(right->getType() == nullptr));
 
         if(right->getType()->operator!=(left->getType()) &&
                         !right->getType()->isDescendedFrom(left->getType()))
@@ -675,8 +671,6 @@ void AssignExpr::Check() {
                                 right->getType()->getTypeName());
                 }
         }
-
-        
 }
 
 const Decl *CompoundExpr::getVariable(const char *name) const
