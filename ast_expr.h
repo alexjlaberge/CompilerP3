@@ -88,7 +88,7 @@ class StringConstant : public Expr
 class NullConstant: public Expr 
 {
   public: 
-    NullConstant(yyltype loc) : Expr(loc) {}
+    NullConstant(yyltype loc) : Expr(loc) {type = Type::nullType;}
     const char *GetPrintNameForNode() { return "NullConstant"; }
     virtual void Check();
 };

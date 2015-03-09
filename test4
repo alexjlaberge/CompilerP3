@@ -1,0 +1,11 @@
+class Cow
+{
+	
+}
+
+
+int main()
+{
+	Cow a;
+	a = null;
+}

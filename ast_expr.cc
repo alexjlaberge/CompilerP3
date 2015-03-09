@@ -190,7 +190,6 @@ void CompoundExpr::Check() {
         op->Check();
 
         right->Check();
-        type_assert(right->getType());
 }
 
 void ArithmeticExpr::Check() {
@@ -549,6 +548,11 @@ void Call::Check() {
                         continue;
                 }
 
+                if(!fn->formalType(i)->isBasicType() && actualType == Type::nullType)
+                {
+                    continue;
+                }
+
                 if (actualType->operator!=(fn->formalType(i)))
                 {
                         ReportError::Formatted(actuals->Nth(i)->GetLocation(),
@@ -598,6 +602,7 @@ void PostfixExpr::Check() {
 }
 
 void NullConstant::Check() {
+    type = Type::nullType;
 }
 
 void This::Check() {
@@ -635,15 +640,31 @@ void AssignExpr::Check() {
         CompoundExpr::Check();
 
         compound_expr_return_if_errors();
+        assert(!(right->getType() == nullptr));
 
         if(right->getType()->operator!=(left->getType()) &&
                         !right->getType()->isDescendedFrom(left->getType()))
         {
-                ReportError::Formatted(op->GetLocation(),
+                if(right->getType() == Type::nullType)
+                {
+                    if(left->getType()->isBasicType())
+                    {
+                            ReportError::Formatted(op->GetLocation(),
                                 "Incompatible operands: %s = %s",
                                 left->getType()->getTypeName(),
                                 right->getType()->getTypeName());
+                    }
+                }
+                else
+                {
+                    ReportError::Formatted(op->GetLocation(),
+                                "Incompatible operands: %s = %s",
+                                left->getType()->getTypeName(),
+                                right->getType()->getTypeName());
+                }
         }
+
+        
 }
 
 const Decl *CompoundExpr::getVariable(const char *name) const
