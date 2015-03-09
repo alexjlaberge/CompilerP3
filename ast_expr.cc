@@ -636,7 +636,8 @@ void AssignExpr::Check() {
 
         compound_expr_return_if_errors();
 
-        if(right->getType()->operator!=(left->getType()))
+        if(right->getType()->operator!=(left->getType()) &&
+                        !right->getType()->isDescendedFrom(left->getType()))
         {
                 ReportError::Formatted(op->GetLocation(),
                                 "Incompatible operands: %s = %s",

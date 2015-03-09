@@ -49,7 +49,7 @@ class Node
     void addLevel() {level++; }//std::cout << level;}
     int getLevel() {return level;}
     void setLevel(int l) {level = l;}
-    yyltype *GetLocation()   { return location; }
+    yyltype *GetLocation() const { return location; }
     void SetParent(Node *p)  { parent = p; }
     Node *GetParent()        { return parent; }
     virtual bool isBreakable() {return false;}

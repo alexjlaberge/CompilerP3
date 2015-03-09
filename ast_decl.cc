@@ -6,6 +6,10 @@
 #include "ast_type.h"
 #include "ast_stmt.h"
 #include "symbols.h"
+#include "errors.h"
+#include <iostream>
+
+using namespace std;
 
 Decl::Decl(Identifier *n) : Node(*n->GetLocation()) {
     Assert(n != NULL);
@@ -91,7 +95,18 @@ void FnDecl::Check() {
                 i++;
         }
 
-        body->Check();
+        if (body == nullptr)
+        {
+                if (dynamic_cast<InterfaceDecl*>(parent) == nullptr)
+                {
+                        /* there's an error here */
+                        assert(0);
+                }
+        }
+        else
+        {
+                body->Check();
+        }
 
         returnType->Check();
 }
@@ -146,8 +161,114 @@ void ClassDecl::Check() {
         while (i < implements->NumElements())
         {
                 implements->Nth(i)->Check();
+
+                const InterfaceDecl *iface =
+                        dynamic_cast<const InterfaceDecl*>(
+                                        parent->getVariable(implements->Nth(i)->getTypeName())
+                                        );
+
+                if (iface == nullptr)
+                {
+                        ReportError::Formatted(implements->Nth(i)->GetLocation(),
+                                        "Can't find interface %s",
+                                        implements->Nth(i)->getTypeName());
+                        return;
+                }
+
+                for (int j = 0; j < iface->numMembers(); j++)
+                {
+                        FnDecl *myFn = nullptr;
+                        const FnDecl *ifaceFn = dynamic_cast<const FnDecl*>(
+                                        iface->getMember(j));
+
+                        for (int k = 0; k < members->NumElements(); k++)
+                        {
+                                if (strcmp(members->Nth(k)->getName(),
+                                                        ifaceFn->getName()) == 0)
+                                {
+                                        myFn = dynamic_cast<FnDecl*>(
+                                                        members->Nth(k));
+                                        assert(myFn);
+                                        break;
+                                }
+                        }
+
+                        if (myFn == nullptr)
+                        {
+                                ReportError::Formatted(implements->Nth(i)->GetLocation(),
+                                                "Class '%s' does not implement entire interface '%s'",
+                                                id->GetName(),
+                                                iface->getName());
+                                continue;
+                        }
+                }
+
+                for (int j = 0; j < iface->numMembers(); j++)
+                {
+                        FnDecl *myFn = nullptr;
+                        const FnDecl *ifaceFn = dynamic_cast<const FnDecl*>(
+                                        iface->getMember(j));
+                        if (ifaceFn == nullptr)
+                        {
+                                assert(0);
+                        }
+
+                        for (int k = 0; k < members->NumElements(); k++)
+                        {
+                                if (strcmp(members->Nth(k)->getName(),
+                                                        ifaceFn->getName()) == 0)
+                                {
+                                        myFn = dynamic_cast<FnDecl*>(
+                                                        members->Nth(k));
+                                        assert(myFn);
+                                        break;
+                                }
+                        }
+
+                        if (myFn != nullptr && !myFn->signatureEqual(ifaceFn))
+                        {
+                                ReportError::Formatted(myFn->GetLocation(),
+                                                "Method '%s' must match inherited type signature",
+                                                myFn->getName());
+                        }
+                }
+
                 i++;
         }
+}
+
+bool FnDecl::signatureEqual(const FnDecl *other) const
+{
+        if (returnType->operator!=(other->returnType))
+        {
+                return false;
+        }
+
+        if (formals->NumElements() != other->formals->NumElements())
+        {
+                return false;
+        }
+
+        for (int i = 0; i < formals->NumElements(); i++)
+        {
+                if (formals->Nth(i)->getType()->operator!=(
+                                        other->formals->Nth(i)->getType()))
+                {
+                        return false;
+                }
+        }
+
+        return true;
+}
+
+const Decl *InterfaceDecl::getMember(int i) const
+{
+        return members->Nth(i);
+}
+
+int InterfaceDecl::numMembers() const
+{
+        return members->NumElements();
 }
 
 const Decl * ClassDecl::getVariable(const char *name) const
@@ -160,10 +281,14 @@ const Decl * ClassDecl::getVariable(const char *name) const
                 }
         }
 
-        const ClassDecl *super = dynamic_cast<const ClassDecl*>(parent->getVariable(extends->getTypeName()));
-        if (super != nullptr)
+        if (extends != nullptr)
         {
-                return super->getVariable(name);
+                const ClassDecl *super = dynamic_cast<const ClassDecl*>(
+                                parent->getVariable(extends->getTypeName()));
+                if (super != nullptr)
+                {
+                        return super->getVariable(name);
+                }
         }
 
         return parent->getVariable(name);
@@ -215,4 +340,48 @@ int FnDecl::NumFormals() const
         }
 
         return 0;
+}
+
+const Decl *InterfaceDecl::getVariable(const char *name) const
+{
+        for (int i = 0; i < members->NumElements(); i++)
+        {
+                if (strcmp(members->Nth(i)->getName(), name) == 0)
+                {
+                        return members->Nth(i);
+                }
+        }
+
+        return parent->getVariable(name);
+}
+
+bool Decl::descendedFrom(const char *name) const
+{
+        return false;
+}
+
+bool ClassDecl::descendedFrom(const char *name) const
+{
+        if (extends != nullptr)
+        {
+                if (strcmp(extends->getTypeName(), name) == 0)
+                {
+                        return true;
+                }
+
+                if (parent->getVariable(extends->getTypeName())->descendedFrom(name))
+                {
+                        return true;
+                }
+        }
+
+        for (int i = 0; i < implements->NumElements(); i++)
+        {
+                if (strcmp(implements->Nth(i)->getTypeName(), name) == 0)
+                {
+                        return true;
+                }
+        }
+
+        return false;
 }

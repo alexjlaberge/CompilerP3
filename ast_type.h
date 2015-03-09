@@ -31,6 +31,7 @@ class Type : public Node
     virtual void Check();
     virtual const char *getTypeName() const {return typeName;}
     virtual bool operator!=(const Type *rhs) const;
+    virtual bool isDescendedFrom(const Type *other) const { return false; }
 };
 
 class NamedType : public Type 
@@ -47,6 +48,7 @@ class NamedType : public Type
     const Identifier * GetId() { return id; }
     virtual void Check();
     const char *getTypeName() const {return id->GetName();}
+    virtual bool isDescendedFrom(const Type *other) const;
 };
 
 class ArrayType : public Type 

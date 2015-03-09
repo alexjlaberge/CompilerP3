@@ -9,6 +9,9 @@
 #include "errors.h"
 #include "symbols.h"
 #include <cassert>
+#include <iostream>
+
+using namespace std;
  
 /* Class constants
  * ---------------
@@ -100,4 +103,17 @@ const char *ArrayType::getTypeName() const
 Type *ArrayType::getBaseType() const
 {
         return elemType;
+}
+
+bool NamedType::isDescendedFrom(const Type *other) const
+{
+        const Decl *me = parent->getVariable(getTypeName());
+        const Decl *par = parent->getVariable(other->getTypeName());
+
+        if (me == nullptr || par == nullptr)
+        {
+                return false;
+        }
+
+        return me->descendedFrom(par->getName());
 }
