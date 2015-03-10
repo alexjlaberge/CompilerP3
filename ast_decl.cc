@@ -130,6 +130,12 @@ void Decl::Check() {
 
 void VarDecl::Check() {
         Decl::Check();
+        /*if(parent->getVariable(id->GetName()) == nullptr)
+        {
+            ReportError::Formatted(parent->getVariable(id->GetName())->GetLocation(), "Bullshit");
+        }*/
+
+        //Decl::Check();
 
         type->Check();
 }

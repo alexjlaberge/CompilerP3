@@ -8,6 +8,10 @@ class B extends A
 	
 }
 
+int a;
+
+int a;
+
 class C extends B
 {
 	int getA(int b, A b, B c, C d) {return a;}
