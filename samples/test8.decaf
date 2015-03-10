@@ -1,0 +1,26 @@
+class Cow
+{
+	int getA(int a, int a, int a)
+	{
+		int a;
+	}
+}
+
+int a;
+
+int main()
+{
+	Cow[] a;
+	int b;
+	bool c;
+	int c;
+	b = -b;
+	c = !c;
+	b = New(Cow);
+	a[1] = null;
+	return 0;
+	a.getA(b,b,b);
+	a[1].getA(b,c,c);
+}
+
+int a;

@@ -685,7 +685,7 @@ void Call::Check() {
                                         actuals->Nth(i)->getType()->getTypeName(),
                                         fn->formalType(i)->getTypeName());
                         type = Type::errorType;
-                        return;
+                        //return;
                 }
         }
 }

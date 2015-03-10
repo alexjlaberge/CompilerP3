@@ -1,0 +1,48 @@
+
+*** Error line 3.
+	int getA(int a, int a, int a)
+                            ^
+*** Declaration of 'a' here conflicts with declaration on line 3
+
+
+*** Error line 3.
+	int getA(int a, int a, int a)
+                                   ^
+*** Declaration of 'a' here conflicts with declaration on line 3
+
+
+*** Error line 16.
+	int c;
+            ^
+*** Declaration of 'c' here conflicts with declaration on line 15
+
+
+*** Error line 19.
+	b = New(Cow);
+          ^
+*** Incompatible operands: int = Cow
+
+
+*** Error line 22.
+	a.getA(b,b,b);
+          ^^^^
+*** Cow[] has no such field 'getA'
+
+
+*** Error line 23.
+	a[1].getA(b,c,c);
+                    ^
+*** Incompatible argument 2: bool given, int expected
+
+
+*** Error line 23.
+	a[1].getA(b,c,c);
+                      ^
+*** Incompatible argument 3: bool given, int expected
+
+
+*** Error line 26.
+int a;
+    ^
+*** Declaration of 'a' here conflicts with declaration on line 9
+
