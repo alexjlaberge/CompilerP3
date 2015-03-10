@@ -1,6 +1,12 @@
 
 *** Error line 13.
+int a;
+    ^
+*** Declaration of 'a' here conflicts with declaration on line 11
+
+
+*** Error line 17.
 	int getA(int b, A b, B c, C d) {return a;}
                           ^
-*** Declaration of 'b' here conflicts with declaration on line 13
+*** Declaration of 'b' here conflicts with declaration on line 17
 

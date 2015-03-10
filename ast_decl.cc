@@ -130,10 +130,10 @@ void Decl::Check() {
 
 void VarDecl::Check() {
         Decl::Check();
-        /*if(parent->getVariable(id->GetName()) == nullptr)
+        if(parent->getVariable(id->GetName())->GetLocation() != location)
         {
-            ReportError::Formatted(parent->getVariable(id->GetName())->GetLocation(), "Bullshit");
-        }*/
+            ReportError::Formatted(location, "Declaration of '%s' here conflicts with declaration on line %d",id->GetName(),parent->getVariable(id->GetName())->GetLocation()->first_line);
+        }
 
         //Decl::Check();
 
