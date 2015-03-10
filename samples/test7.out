@@ -1,0 +1,6 @@
+
+*** Error line 13.
+	int getA(int b, A b, B c, C d) {return a;}
+                          ^
+*** Declaration of 'b' here conflicts with declaration on line 13
+

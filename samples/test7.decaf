@@ -1,0 +1,14 @@
+class A
+{
+	int a;
+}
+
+class B extends A
+{
+	
+}
+
+class C extends B
+{
+	int getA(int b, A b, B c, C d) {return a;}
+}

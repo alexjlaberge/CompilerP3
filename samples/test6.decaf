@@ -1,0 +1,9 @@
+int main()
+{
+	int a;
+	double b;
+
+	a = (a + b);
+
+	return 0;
+}
