@@ -605,6 +605,14 @@ void Call::Check() {
                                                 t->getTypeName(),
                                                 field->GetName());
                         }
+                        else if (dynamic_cast<const ArrayType*>(t) != nullptr &&
+                                        strcmp(field->GetName(), "length") != 0)
+                        {
+                                ReportError::Formatted(field->GetLocation(),
+                                                "%s has no such field '%s'",
+                                                t->getTypeName(),
+                                                field->GetName());
+                        }
                         type = Type::errorType;
                         return;
                 }
