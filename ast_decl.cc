@@ -114,6 +114,11 @@ void FnDecl::Check() {
 void InterfaceDecl::Check() {
         Decl::Check();
 
+        if (parent->getVariable(id->GetName())->GetLocation() != location)
+        {
+            ReportError::Formatted(location, "Declaration of '%s' here conflicts with declaration on line %d",id->GetName(),parent->getVariable(id->GetName())->GetLocation()->first_line);
+        }
+
         int i = 0;
 
         while (i < members->NumElements())
@@ -124,7 +129,6 @@ void InterfaceDecl::Check() {
 }
 
 void Decl::Check() {
-        /* TODO Put decl id in symbol table */
         id->Check();
 }
 
@@ -135,17 +139,15 @@ void VarDecl::Check() {
             ReportError::Formatted(location, "Declaration of '%s' here conflicts with declaration on line %d",id->GetName(),parent->getVariable(id->GetName())->GetLocation()->first_line);
         }
 
-        //Decl::Check();
-
         type->Check();
 }
 
 void ClassDecl::Check() {
         Decl::Check();
 
-        for(int i = 0; i < members->NumElements(); i++)
+        if (parent->getVariable(id->GetName())->GetLocation() != location)
         {
-            members->Nth(i)->setLevel(level+1);
+            ReportError::Formatted(location, "Declaration of '%s' here conflicts with declaration on line %d",id->GetName(),parent->getVariable(id->GetName())->GetLocation()->first_line);
         }
 
         int i = 0;
@@ -153,6 +155,43 @@ void ClassDecl::Check() {
         if (extends != nullptr)
         {
                 extends->Check();
+
+                const ClassDecl *supercls = dynamic_cast<const ClassDecl*>(
+                                parent->getVariable(extends->getTypeName())
+                                );
+
+                if (supercls != nullptr)
+                {
+                        for (int j = 0; j < supercls->numMembers(); j++)
+                        {
+                                FnDecl *myFn = nullptr;
+                                const FnDecl *ifaceFn = dynamic_cast<const FnDecl*>(
+                                                supercls->getMember(j));
+                                if (ifaceFn == nullptr)
+                                {
+                                        continue;
+                                }
+
+                                for (int k = 0; k < members->NumElements(); k++)
+                                {
+                                        if (strcmp(members->Nth(k)->getName(),
+                                                                ifaceFn->getName()) == 0)
+                                        {
+                                                myFn = dynamic_cast<FnDecl*>(
+                                                                members->Nth(k));
+                                                assert(myFn);
+                                                break;
+                                        }
+                                }
+
+                                if (myFn != nullptr && !myFn->signatureEqual(ifaceFn))
+                                {
+                                        ReportError::Formatted(myFn->GetLocation(),
+                                                        "Method '%s' must match inherited type signature",
+                                                        myFn->getName());
+                                }
+                        }
+                }
         }
 
         while (i < members->NumElements())
@@ -383,4 +422,14 @@ bool ClassDecl::descendedFrom(const char *name) const
         }
 
         return false;
+}
+
+const Decl *ClassDecl::getMember(int i) const
+{
+        return members->Nth(i);
+}
+
+int ClassDecl::numMembers() const
+{
+        return members->NumElements();
 }

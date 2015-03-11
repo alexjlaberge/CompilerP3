@@ -1,0 +1,38 @@
+interface Food {
+        bool isEdible();
+}
+
+class Toast implements Food {
+        bool isEdible() { return true; }
+}
+
+class Eggs implements Food {
+        bool isEdible() { return true; }
+        Toast getCompanion() { return New(Toast); }
+}
+
+class Scrambled extends Eggs {}
+
+class SunnySideUp extends Eggs {
+        bool isEdible() { return false; }
+}
+
+class OverEasy extends Eggs {
+        string isEdible() { return "with toast"; }
+}
+
+class Food {
+        void eatMe() {}
+}
+
+class Eggs {
+        bool isEdible() { return false; }
+}
+
+void main() {
+        Eggs e;
+        Food t;
+
+        e = New(Eggs);
+        t = e.getCompanion();
+}

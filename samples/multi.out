@@ -1,0 +1,18 @@
+
+*** Error line 21.
+        string isEdible() { return "with toast"; }
+               ^^^^^^^^
+*** Method 'isEdible' must match inherited type signature
+
+
+*** Error line 24.
+class Food {
+      ^^^^
+*** Declaration of 'Food' here conflicts with declaration on line 1
+
+
+*** Error line 28.
+class Eggs {
+      ^^^^
+*** Declaration of 'Eggs' here conflicts with declaration on line 9
+

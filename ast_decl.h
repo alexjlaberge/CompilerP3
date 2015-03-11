@@ -62,6 +62,9 @@ class ClassDecl : public Decl
     virtual const Decl *getVariable(const char *name) const;
     virtual const ClassDecl *getThis() const;
     virtual bool descendedFrom(const char *name) const;
+
+    const Decl *getMember(int i) const;
+    int numMembers() const;
 };
 
 class InterfaceDecl : public Decl 
