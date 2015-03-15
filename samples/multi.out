@@ -16,3 +16,9 @@ class Eggs {
       ^^^^
 *** Declaration of 'Eggs' here conflicts with declaration on line 9
 
+
+*** Error line 40.
+interface Food {
+          ^^^^
+*** Declaration of 'Food' here conflicts with declaration on line 1
+

@@ -36,3 +36,7 @@ void main() {
         e = New(Eggs);
         t = e.getCompanion();
 }
+
+interface Food {
+        bool isEdible();
+}
