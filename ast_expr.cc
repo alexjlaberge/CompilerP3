@@ -433,7 +433,7 @@ void FieldAccess::Check() {
                         var = getVariable(field->GetName());
                 }
 
-                if (var == nullptr)
+                if (var == nullptr && base->getType() != Type::errorType)
                 {
                         ReportError::Formatted(field->GetLocation(),
                                         "%s has no such field '%s'",

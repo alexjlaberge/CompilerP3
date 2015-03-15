@@ -1,0 +1,6 @@
+
+*** Error line 8.
+    this.me = 2;
+    ^^^^
+*** 'this' is only valid within class scope
+

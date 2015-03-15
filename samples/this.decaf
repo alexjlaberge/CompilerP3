@@ -1,0 +1,9 @@
+class Heyo {
+    int me;
+}
+
+void main() {
+    Heyo hey;
+
+    this.me = 2;
+}
