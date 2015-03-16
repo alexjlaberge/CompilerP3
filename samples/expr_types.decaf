@@ -1,0 +1,31 @@
+class heyo {}
+
+void get_me(int a, int b, bool ba) { return; }
+
+void main() {
+    int ia;
+    int ib;
+    double da;
+    double db;
+    bool ba;
+    bool bb;
+    heyo hey;
+
+    for (ia = 0; ba; ia = ia + 1) {
+        ib = get_me(ia, db, ba);
+        db = ia;
+        ia = ib;
+        ib = db;
+        ba = ia;
+        bb = db;
+        db = bb;
+        db = db + db;
+        db = db + ia;
+        db = db + bb;
+        ba || bb && ba || !ba;
+        db + db - db * db / da;
+        ib + ib - ib * ib / ia;
+        hey = db + db - (db && bb) * db / da / ((ib + (ib - ib)) * ib / ia);
+        hey = get_me(0, 0, 0, 0, 0);
+    }
+}

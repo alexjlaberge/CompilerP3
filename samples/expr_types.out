@@ -1,0 +1,84 @@
+
+*** Error line 15.
+        ib = get_me(ia, db, ba);
+           ^
+*** Incompatible operands: int = void
+
+
+*** Error line 15.
+        ib = get_me(ia, db, ba);
+                        ^^
+*** Incompatible argument 2: double given, int expected
+
+
+*** Error line 16.
+        db = ia;
+           ^
+*** Incompatible operands: double = int
+
+
+*** Error line 18.
+        ib = db;
+           ^
+*** Incompatible operands: int = double
+
+
+*** Error line 19.
+        ba = ia;
+           ^
+*** Incompatible operands: bool = int
+
+
+*** Error line 20.
+        bb = db;
+           ^
+*** Incompatible operands: bool = double
+
+
+*** Error line 21.
+        db = bb;
+           ^
+*** Incompatible operands: double = bool
+
+
+*** Error line 23.
+        db = db + ia;
+                ^
+*** Incompatible operands: double + int
+
+
+*** Error line 24.
+        db = db + bb;
+                ^
+*** Incompatible operands: double + bool
+
+
+*** Error line 28.
+        hey = db + db - (db && bb) * db / da / ((ib + (ib - ib)) * ib / ia);
+                            ^^
+*** Incompatible operands: double && bool
+
+
+*** Error line 28.
+        hey = db + db - (db && bb) * db / da / ((ib + (ib - ib)) * ib / ia);
+                                   ^
+*** Incompatible operands: bool * double
+
+
+*** Error line 29.
+        hey = get_me(0, 0, 0, 0, 0);
+            ^
+*** Incompatible operands: heyo = void
+
+
+*** Error line 29.
+        hey = get_me(0, 0, 0, 0, 0);
+              ^^^^^^
+*** Function 'get_me' expects 3 arguments but 5 given
+
+
+*** Error line 29.
+        hey = get_me(0, 0, 0, 0, 0);
+                           ^
+*** Incompatible argument 3: int given, bool expected
+
