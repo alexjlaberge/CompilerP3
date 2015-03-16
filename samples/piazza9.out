@@ -1,0 +1,12 @@
+
+*** Error line 7.
+class Child extends Parent implements Interface {}
+                                      ^^^^^^^^^
+*** Class 'Child' does not implement entire interface 'Interface'
+
+
+*** Error line 10.
+        int Func(){}
+            ^^^^
+*** Method 'Func' must match inherited type signature
+

@@ -1,0 +1,18 @@
+
+*** Error line 7.
+  blue = this;
+         ^^^^
+*** 'this' is only valid within class scope
+
+
+*** Error line 9.
+  blue.color = 10;
+       ^^^^^
+*** Crayon field 'color' only accessible within class scope
+
+
+*** Error line 10.
+  pens.color = 5;
+       ^^^^^
+*** int[] has no such field 'color'
+

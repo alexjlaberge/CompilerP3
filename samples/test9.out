@@ -1,0 +1,36 @@
+
+*** Error line 3.
+	return a;
+               ^
+*** Incompatible return: string[] given, bool expected
+
+
+*** Error line 10.
+	a = Winky(a,a,a,a);
+          ^
+*** Incompatible operands: double = bool
+
+
+*** Error line 10.
+	a = Winky(a,a,a,a);
+            ^^^^^
+*** Function 'Winky' expects 3 arguments but 4 given
+
+
+*** Error line 10.
+	a = Winky(a,a,a,a);
+                  ^
+*** Incompatible argument 1: double given, string[] expected
+
+
+*** Error line 10.
+	a = Winky(a,a,a,a);
+                    ^
+*** Incompatible argument 2: double given, bool expected
+
+
+*** Error line 10.
+	a = Winky(a,a,a,a);
+                      ^
+*** Incompatible argument 3: double given, int expected
+

@@ -1,0 +1,11 @@
+class Parent {
+        int Func(){}
+}
+interface Interface {
+        double Func();
+}
+class Child extends Parent implements Interface {}
+
+class Solitary implements Interface {
+        int Func(){}
+}
