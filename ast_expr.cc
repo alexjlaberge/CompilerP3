@@ -669,10 +669,9 @@ void Call::Check() {
                                 fn->NumFormals(),
                                 actuals->NumElements());
                 type = Type::errorType;
-                return;
         }
 
-        for (i = 0; i < actuals->NumElements(); i++)
+        for (i = 0; i < actuals->NumElements() && i < fn->NumFormals(); i++)
         {
                 const Type *actualType = actuals->Nth(i)->getType();
                 if (actualType == Type::errorType)
@@ -682,7 +681,7 @@ void Call::Check() {
 
                 if(!fn->formalType(i)->isBasicType() && actualType == Type::nullType)
                 {
-                    continue;
+                        continue;
                 }
 
                 if (actualType->operator!=(fn->formalType(i)))
@@ -693,7 +692,6 @@ void Call::Check() {
                                         actuals->Nth(i)->getType()->getTypeName(),
                                         fn->formalType(i)->getTypeName());
                         type = Type::errorType;
-                        //return;
                 }
         }
 }
