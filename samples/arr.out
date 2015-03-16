@@ -40,3 +40,9 @@
           ^^^
 *** Array subscript must be an integer
 
+
+*** Error line 19.
+  !a[0];
+  ^
+*** Incompatible operand: ! int[][][][]
+
