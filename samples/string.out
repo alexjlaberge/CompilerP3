@@ -1,0 +1,18 @@
+
+*** Error line 5.
+        f % c + f - c;
+          ^
+*** Incompatible operands: string % string
+
+
+*** Error line 5.
+        f % c + f - c;
+              ^
+*** Incompatible operands: error + string
+
+
+*** Error line 5.
+        f % c + f - c;
+                  ^
+*** Incompatible operands: error - string
+
