@@ -496,23 +496,29 @@ void ArrayAccess::Check() {
                                 subscript->getType()->getTypeName());
         }
 
-        base->Check();
-
         const ArrayType *t = dynamic_cast<const ArrayType*>(base->getType());
         if (t == nullptr)
         {
-                if (base->getType() == Type::errorType)
+                if (dynamic_cast<ArrayAccess*>(base) != nullptr &&
+                                base->getType() != Type::errorType)
                 {
-                        return;
+                        ReportError::Formatted(base->GetLocation(),
+                                        "[] can only be applied to arrays");
+                        type = Type::errorType;
                 }
-
-                ReportError::Formatted(base->GetLocation(),
-                                "[] can only be applied to arrays");
-                type = Type::errorType;
-                return;
+                else if (dynamic_cast<ArrayAccess*>(base) == nullptr)
+                {
+                        ReportError::Formatted(base->GetLocation(),
+                                        "[] can only be applied to arrays");
+                        type = Type::errorType;
+                }
+        }
+        else
+        {
+                type = t->getBaseType();
         }
 
-        type = t->getBaseType();
+        base->Check();
 }
 
 void Operator::Check() {
