@@ -214,9 +214,6 @@ Type *ArithmeticExpr::getType() {
 }
 
 void ArithmeticExpr::Check() {
-        //CompoundExpr::Check();
-        //compound_expr_return_if_errors();
-
         if (left != nullptr)
         {
                 left->Check();
@@ -246,10 +243,6 @@ void ArithmeticExpr::Check() {
                                 "%s where int/double expected",
                                 right->getType()->getTypeName());
                 type = Type::errorType;
-        }
-        else
-        {
-                type = right->getType();
         }
 }
 
