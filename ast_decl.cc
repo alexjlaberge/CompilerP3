@@ -241,6 +241,22 @@ void ClassDecl::Check() {
                                 }
                         }
                 }
+
+                for (int j = i; j < implements->NumElements(); j++)
+                {
+                        if (i != j)
+                        {
+                                if (strcmp(implements->Nth(i)->getTypeName(),
+                                                        implements->Nth(j)->getTypeName()) == 0)
+                                {
+                                        ReportError::Formatted(implements->Nth(j)->GetLocation(),
+                                                        "Class '%s' repeated interface '%s'",
+                                                        getName(),
+                                                        implements->Nth(j)->getTypeName());
+                                        return;
+                                }
+                        }
+                }
         }
 
         if (extends != nullptr)
