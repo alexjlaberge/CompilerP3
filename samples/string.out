@@ -16,3 +16,39 @@
                   ^
 *** Incompatible operands: error - string
 
+
+*** Error line 7.
+        f && c || f && !c;
+          ^^
+*** Incompatible operands: string && string
+
+
+*** Error line 7.
+        f && c || f && !c;
+                    ^^
+*** Incompatible operands: string && bool
+
+
+*** Error line 7.
+        f && c || f && !c;
+                       ^
+*** Incompatible operand: ! string
+
+
+*** Error line 8.
+        f > c || c < f;
+          ^
+*** Incompatible operands: string > string
+
+
+*** Error line 8.
+        f > c || c < f;
+                   ^
+*** Incompatible operands: string < string
+
+
+*** Error line 9.
+        !f;
+        ^
+*** Incompatible operand: ! string
+

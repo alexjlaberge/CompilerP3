@@ -3,4 +3,8 @@ void main() {
         string f;
 
         f % c + f - c;
+        f == c && c != f;
+        f && c || f && !c;
+        f > c || c < f;
+        !f;
 }
