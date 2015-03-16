@@ -85,25 +85,13 @@ void FnDecl::PrintChildren(int indentLevel) {
 
 void FnDecl::Check() {
         
-
         //Check to see if name has already been used.
         ClassDecl* check = dynamic_cast<ClassDecl*>(parent);
         if(parent->getVariable(id->GetName())->GetLocation() != location && (check == nullptr))
         {
             ReportError::Formatted(location, "Declaration of '%s' here conflicts with declaration on line %d",id->GetName(),parent->getVariable(id->GetName())->GetLocation()->first_line);
         }
-
         int i = 0;
-
-        /* TODO this is still not working perfectly, specifically prevDecl->GetLocation() */
-        /*const Decl *prevDecl = parent->getVariable(id->GetName());
-        if (prevDecl != nullptr && prevDecl != this)
-        {
-                ReportError::Formatted(id->GetLocation(),
-                                "Declaration of '%s' here conflicts with declaration on line %d",
-                                id->GetName(),
-                                prevDecl->GetLocation());
-        }*/
 
         while (i < formals->NumElements())
         {
@@ -151,7 +139,7 @@ void Decl::Check() {
 
 void VarDecl::Check() {
         Decl::Check();
-        if(parent->getVariable(id->GetName())->GetLocation() != location && parent->getVariable(id->GetName()) != nullptr)
+        if(parent->getVariable(id->GetName())->GetLocation() != location)
         {
             ReportError::Formatted(location, "Declaration of '%s' here conflicts with declaration on line %d",id->GetName(),parent->getVariable(id->GetName())->GetLocation()->first_line);
         }
@@ -184,27 +172,8 @@ void ClassDecl::Check() {
                                 FnDecl *myFn = nullptr;
                                 const FnDecl *ifaceFn = dynamic_cast<const FnDecl*>(
                                                 supercls->getMember(j));
-                                const VarDecl *superVar = dynamic_cast<const VarDecl*>(
-                                                supercls->getMember(j));
                                 if (ifaceFn == nullptr)
                                 {
-                                        if (superVar == nullptr)
-                                        {
-                                                continue;
-                                        }
-
-                                        for (int k = 0; k < members->NumElements(); k++)
-                                        {
-                                                if (strcmp(members->Nth(k)->getName(),
-                                                                        superVar->getName()) == 0)
-                                                {
-                                                        ReportError::Formatted(members->Nth(k)->GetLocation(),
-                                                                        "Declaration of '%s' here conflicts with declaration on line %d",
-                                                                        members->Nth(k)->getName(),
-                                                                        superVar->GetLocation());
-                                                }
-                                        }
-
                                         continue;
                                 }
 
@@ -359,7 +328,6 @@ int InterfaceDecl::numMembers() const
 const Decl * ClassDecl::getVariable(const char *name) const
 {
         const Decl* retVal;
-        //cout << id->GetName() << endl;
         if (extends != nullptr)
         {
                 const ClassDecl *super = dynamic_cast<const ClassDecl*>(
@@ -367,26 +335,22 @@ const Decl * ClassDecl::getVariable(const char *name) const
                 if (super != nullptr)
                 {
                         retVal = super->getVariable(name);
-                        //cout << id->GetName() << " from inheritance" << endl;
                         if(retVal != nullptr)
                         {
-                            cout << id->GetName() << " from inheritance" << endl;
                             return retVal;
                         }
                 }
         }
+        //cout << id->GetName() << endl;
         for (int i = 0; i < members->NumElements(); i++)
         {
-                cout << "Checking members" << endl;
                 if (strcmp(members->Nth(i)->getName(), name) == 0)
                 {
-                        cout << id->GetName() << " from members" << endl;
                         return members->Nth(i);
                 }
-                //cout << id->GetName() << " from members" << endl;
         }
 
-        /*if (extends != nullptr)
+        if (extends != nullptr)
         {
                 const ClassDecl *super = dynamic_cast<const ClassDecl*>(
                                 parent->getVariable(extends->getTypeName()));
@@ -394,7 +358,7 @@ const Decl * ClassDecl::getVariable(const char *name) const
                 {
                         return super->getVariable(name);
                 }
-        }*/
+        }
 
         return parent->getVariable(name);
 }
