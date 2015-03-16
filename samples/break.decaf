@@ -1,0 +1,15 @@
+void main() {
+    int i;
+
+    break;
+
+    for (i = 0; i < 10; i = i + 1)
+    {
+        if (true) {
+            if (false) {
+                break;
+            }
+            break;
+        }
+    }
+}
