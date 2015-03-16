@@ -157,6 +157,92 @@ void ClassDecl::Check() {
 
         int i = 0;
 
+        for (i = 0; i < implements->NumElements(); i++)
+        {
+                const InterfaceDecl *iface =
+                        dynamic_cast<const InterfaceDecl*>(
+                                        parent->getVariable(implements->Nth(i)->getTypeName())
+                                        );
+
+                if (iface == nullptr)
+                {
+                        ReportError::Formatted(implements->Nth(i)->GetLocation(),
+                                        "No declaration found for interface '%s'",
+                                        implements->Nth(i)->getTypeName());
+                        continue;
+                }
+
+                for (int j = 0; j < iface->numMembers(); j++)
+                {
+                        const FnDecl *myFn = nullptr;
+                        const FnDecl *ifaceFn = dynamic_cast<const FnDecl*>(
+                                        iface->getMember(j));
+
+                        myFn = dynamic_cast<const FnDecl*>(
+                                        getVariable(ifaceFn->getName()));
+
+                        if (myFn == nullptr)
+                        {
+                                ReportError::Formatted(implements->Nth(i)->GetLocation(),
+                                                "Class '%s' does not implement entire interface '%s'",
+                                                id->GetName(),
+                                                iface->getName());
+                                break;
+                        }
+                }
+
+                for (int j = 0; j < iface->numMembers(); j++)
+                {
+                        const FnDecl *myFn = nullptr;
+                        const FnDecl *ifaceFn = dynamic_cast<const FnDecl*>(
+                                        iface->getMember(j));
+                        if (ifaceFn == nullptr)
+                        {
+                                assert(0);
+                        }
+
+                        for (int k = 0; k < members->NumElements(); k++)
+                        {
+                                if (strcmp(members->Nth(k)->getName(),
+                                                        ifaceFn->getName()) == 0)
+                                {
+                                        myFn = dynamic_cast<FnDecl*>(
+                                                        members->Nth(k));
+                                        assert(myFn);
+                                        break;
+                                }
+                        }
+                        myFn = dynamic_cast<const FnDecl*>(
+                                        getVariable(ifaceFn->getName()));
+
+                        if (myFn != nullptr && !myFn->signatureEqual(ifaceFn))
+                        {
+                                int z = 0;
+                                for (z = 0; z < numMembers(); z++)
+                                {
+                                        if (getMember(z) == myFn)
+                                        {
+                                                break;
+                                        }
+                                }
+
+                                if (z != numMembers())
+                                {
+                                        ReportError::Formatted(myFn->GetLocation(),
+                                                        "Method '%s' must match inherited type signature",
+                                                        myFn->getName());
+                                }
+                                else
+                                {
+                                        ReportError::Formatted(implements->Nth(i)->GetLocation(),
+                                                        "Class '%s' does not implement entire interface '%s'",
+                                                        getName(),
+                                                        iface->getName());
+                                }
+                        }
+                }
+        }
+
         if (extends != nullptr)
         {
                 extends->Check();
@@ -203,91 +289,6 @@ void ClassDecl::Check() {
         {
                 members->Nth(i)->Check();
                 i++;
-        }
-
-        for (i = 0; i < implements->NumElements(); i++)
-        {
-                const InterfaceDecl *iface =
-                        dynamic_cast<const InterfaceDecl*>(
-                                        parent->getVariable(implements->Nth(i)->getTypeName())
-                                        );
-
-                if (iface == nullptr)
-                {
-                        ReportError::Formatted(implements->Nth(i)->GetLocation(),
-                                        "No declaration found for interface '%s'",
-                                        implements->Nth(i)->getTypeName());
-                        continue;
-                }
-
-                for (int j = 0; j < iface->numMembers(); j++)
-                {
-                        FnDecl *myFn = nullptr;
-                        const FnDecl *ifaceFn = dynamic_cast<const FnDecl*>(
-                                        iface->getMember(j));
-
-                        for (int k = 0; k < members->NumElements(); k++)
-                        {
-                                if (strcmp(members->Nth(k)->getName(),
-                                                        ifaceFn->getName()) == 0)
-                                {
-                                        myFn = dynamic_cast<FnDecl*>(
-                                                        members->Nth(k));
-                                        assert(myFn);
-                                        break;
-                                }
-                        }
-                        /*if(myFn->getType() != nullptr)
-                        {
-                            cout << myFn->getType()->getTypeName() << endl;
-                        }
-                        if(ifaceFn->getType() != nullptr)
-                        {
-                            cout << ifaceFn->getType()->getTypeName() << endl;
-                        }*/
-
-                        if (myFn == nullptr )//|| (myFn != nullptr && strcmp(myFn->getType()->getTypeName(), ifaceFn->getType()->getTypeName())))
-                        {
-                                ReportError::Formatted(implements->Nth(i)->GetLocation(),
-                                                "Class '%s' does not implement entire interface '%s'",
-                                                id->GetName(),
-                                                iface->getName());
-                                //continue;
-                                break;
-                        }
-                }
-
-                for (int j = 0; j < iface->numMembers(); j++)
-                {
-                        FnDecl *myFn = nullptr;
-                        const FnDecl *ifaceFn = dynamic_cast<const FnDecl*>(
-                                        iface->getMember(j));
-                        if (ifaceFn == nullptr)
-                        {
-                                assert(0);
-                        }
-
-                        for (int k = 0; k < members->NumElements(); k++)
-                        {
-                                if (strcmp(members->Nth(k)->getName(),
-                                                        ifaceFn->getName()) == 0)
-                                {
-                                        myFn = dynamic_cast<FnDecl*>(
-                                                        members->Nth(k));
-                                        assert(myFn);
-                                        break;
-                                }
-                        }
-
-                        if (myFn != nullptr && !myFn->signatureEqual(ifaceFn))
-                        {
-                                ReportError::Formatted(myFn->GetLocation(),
-                                                "Method '%s' must match inherited type signature",
-                                                myFn->getName());
-                        }
-
-
-                }
         }
 }
 
@@ -347,16 +348,6 @@ const Decl * ClassDecl::getVariable(const char *name) const
                 if (strcmp(members->Nth(i)->getName(), name) == 0)
                 {
                         return members->Nth(i);
-                }
-        }
-
-        if (extends != nullptr)
-        {
-                const ClassDecl *super = dynamic_cast<const ClassDecl*>(
-                                parent->getVariable(extends->getTypeName()));
-                if (super != nullptr)
-                {
-                        return super->getVariable(name);
                 }
         }
 

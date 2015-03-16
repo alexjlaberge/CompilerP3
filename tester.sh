@@ -1,6 +1,8 @@
 #!/bin/bash
 # Proper header for a Bash script.
 
+make
+
 if [ ! -z ${1} ]
 then
         input="samples/${1}.decaf"
