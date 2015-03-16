@@ -1,0 +1,9 @@
+class Heyo {
+        int blah;
+}
+
+void main() {
+        Heyo h;
+
+        h.blah = 2;
+}
