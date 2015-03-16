@@ -12,6 +12,7 @@ fi
 for input in `ls samples/*.decaf`
 do
         echo -ne "Testing ${input}..."
+        ./solution/dcc < ${input} 2>&1 &> `echo ${input} | sed -e "s/\..*/\.out/"`
         ./dcc < ${input} 2>&1 | diff -aq \
                 `echo ${input} | sed -e "s/\..*/\.out/"` - && echo "PASS"
 done
