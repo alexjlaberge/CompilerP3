@@ -86,6 +86,11 @@ void FnDecl::PrintChildren(int indentLevel) {
 void FnDecl::Check() {
         
         //Check to see if name has already been used.
+        ClassDecl* check = dynamic_cast<ClassDecl*>(parent);
+        if(parent->getVariable(id->GetName())->GetLocation() != location && (check == nullptr))
+        {
+            ReportError::Formatted(location, "Declaration of '%s' here conflicts with declaration on line %d",id->GetName(),parent->getVariable(id->GetName())->GetLocation()->first_line);
+        }
         int i = 0;
 
         while (i < formals->NumElements())
@@ -322,6 +327,20 @@ int InterfaceDecl::numMembers() const
 
 const Decl * ClassDecl::getVariable(const char *name) const
 {
+        const Decl* retVal;
+        if (extends != nullptr)
+        {
+                const ClassDecl *super = dynamic_cast<const ClassDecl*>(
+                                parent->getVariable(extends->getTypeName()));
+                if (super != nullptr)
+                {
+                        retVal = super->getVariable(name);
+                        if(retVal != nullptr)
+                        {
+                            return retVal;
+                        }
+                }
+        }
         //cout << id->GetName() << endl;
         for (int i = 0; i < members->NumElements(); i++)
         {
