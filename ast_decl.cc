@@ -85,7 +85,7 @@ void FnDecl::PrintChildren(int indentLevel) {
 
 void FnDecl::Check() {
         
-
+        //Check to see if name has already been used.
         int i = 0;
 
         while (i < formals->NumElements())
@@ -232,14 +232,23 @@ void ClassDecl::Check() {
                                         break;
                                 }
                         }
+                        /*if(myFn->getType() != nullptr)
+                        {
+                            cout << myFn->getType()->getTypeName() << endl;
+                        }
+                        if(ifaceFn->getType() != nullptr)
+                        {
+                            cout << ifaceFn->getType()->getTypeName() << endl;
+                        }*/
 
-                        if (myFn == nullptr)
+                        if (myFn == nullptr )//|| (myFn != nullptr && strcmp(myFn->getType()->getTypeName(), ifaceFn->getType()->getTypeName())))
                         {
                                 ReportError::Formatted(implements->Nth(i)->GetLocation(),
                                                 "Class '%s' does not implement entire interface '%s'",
                                                 id->GetName(),
                                                 iface->getName());
-                                continue;
+                                //continue;
+                                break;
                         }
                 }
 
@@ -271,6 +280,8 @@ void ClassDecl::Check() {
                                                 "Method '%s' must match inherited type signature",
                                                 myFn->getName());
                         }
+
+
                 }
         }
 }
@@ -311,6 +322,7 @@ int InterfaceDecl::numMembers() const
 
 const Decl * ClassDecl::getVariable(const char *name) const
 {
+        //cout << id->GetName() << endl;
         for (int i = 0; i < members->NumElements(); i++)
         {
                 if (strcmp(members->Nth(i)->getName(), name) == 0)

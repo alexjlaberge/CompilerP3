@@ -1,0 +1,6 @@
+
+*** Error line 8.
+	Cow k;
+        ^^^
+*** No declaration found for type 'Cow'
+

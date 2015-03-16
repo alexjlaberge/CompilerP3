@@ -1,0 +1,16 @@
+class foo extends bar {
+    int x;
+    void foo() {
+        int x;
+        string x;
+    }
+}
+void foo() {
+    int x;
+    double x;
+    string x;
+    bool x;
+}
+class bar {
+    int x;
+}

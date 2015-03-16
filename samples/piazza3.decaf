@@ -1,0 +1,12 @@
+int x;
+int y;
+class Cow {
+	int x;
+}
+
+int main() {
+	Cow k;
+	int i;
+	int j;
+	int Cow;
+}

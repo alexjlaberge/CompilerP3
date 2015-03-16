@@ -1,0 +1,36 @@
+
+*** Error line 2.
+    int x;
+        ^
+*** Declaration of 'x' here conflicts with declaration on line 15
+
+
+*** Error line 5.
+        string x;
+               ^
+*** Declaration of 'x' here conflicts with declaration on line 4
+
+
+*** Error line 8.
+void foo() {
+     ^^^
+*** Declaration of 'foo' here conflicts with declaration on line 1
+
+
+*** Error line 10.
+    double x;
+           ^
+*** Declaration of 'x' here conflicts with declaration on line 9
+
+
+*** Error line 11.
+    string x;
+           ^
+*** Declaration of 'x' here conflicts with declaration on line 9
+
+
+*** Error line 12.
+    bool x;
+         ^
+*** Declaration of 'x' here conflicts with declaration on line 9
+
