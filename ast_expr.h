@@ -191,6 +191,7 @@ class ArrayAccess : public LValue
     void PrintChildren(int indentLevel);
     virtual void Check();
     virtual Type* getType();
+    Expr *getBase() { return base; }
 };
 
 /* Note that field access is used both for qualified names
