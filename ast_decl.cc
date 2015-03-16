@@ -85,8 +85,17 @@ void FnDecl::PrintChildren(int indentLevel) {
 
 void FnDecl::Check() {
         
-        //Check to see if name has already been used.
         int i = 0;
+
+        /* TODO this is still not working perfectly, specifically prevDecl->GetLocation() */
+        const Decl *prevDecl = parent->getVariable(id->GetName());
+        if (prevDecl != nullptr && prevDecl != this)
+        {
+                ReportError::Formatted(id->GetLocation(),
+                                "Declaration of '%s' here conflicts with declaration on line %d",
+                                id->GetName(),
+                                prevDecl->GetLocation());
+        }
 
         while (i < formals->NumElements())
         {
@@ -167,8 +176,27 @@ void ClassDecl::Check() {
                                 FnDecl *myFn = nullptr;
                                 const FnDecl *ifaceFn = dynamic_cast<const FnDecl*>(
                                                 supercls->getMember(j));
+                                const VarDecl *superVar = dynamic_cast<const VarDecl*>(
+                                                supercls->getMember(j));
                                 if (ifaceFn == nullptr)
                                 {
+                                        if (superVar == nullptr)
+                                        {
+                                                continue;
+                                        }
+
+                                        for (int k = 0; k < members->NumElements(); k++)
+                                        {
+                                                if (strcmp(members->Nth(k)->getName(),
+                                                                        superVar->getName()) == 0)
+                                                {
+                                                        ReportError::Formatted(members->Nth(k)->GetLocation(),
+                                                                        "Declaration of '%s' here conflicts with declaration on line %d",
+                                                                        members->Nth(k)->getName(),
+                                                                        superVar->GetLocation());
+                                                }
+                                        }
+
                                         continue;
                                 }
 
