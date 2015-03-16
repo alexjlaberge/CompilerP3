@@ -1,0 +1,4 @@
+class foo  {
+  void func(string foo, foo x){
+  }
+}

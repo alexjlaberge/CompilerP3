@@ -1,0 +1,12 @@
+
+*** Error line 5.
+class A implements IF, IF{}
+                   ^^
+*** Class 'A' does not implement entire interface 'IF'
+
+
+*** Error line 5.
+class A implements IF, IF{}
+                       ^^
+*** Class 'A' repeated interface 'IF'
+

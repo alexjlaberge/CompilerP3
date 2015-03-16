@@ -1,0 +1,9 @@
+class foo2 extends foo {
+  void func(string foo, foo x) {
+  }
+}
+
+class foo  {
+  void func(string foo, foo x){
+  }
+}

@@ -1,0 +1,17 @@
+int main(){
+  string s;
+  A a;
+  B b;
+  s = a.foo();
+  s = b.foo();
+}
+
+class A{
+  Thing foo(){}
+}
+
+class B extends A{
+  int foo(){}
+}
+
+class Thing{}

@@ -1,0 +1,5 @@
+interface IF{
+  int func();
+}
+
+class A implements IF, IF{}

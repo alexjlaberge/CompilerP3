@@ -1,0 +1,6 @@
+
+*** Error line 2.
+  void func(string foo, foo x){
+                        ^^^
+*** No declaration found for type 'foo'
+

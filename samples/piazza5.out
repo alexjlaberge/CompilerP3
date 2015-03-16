@@ -1,0 +1,18 @@
+
+*** Error line 5.
+  s = a.foo();
+    ^
+*** Incompatible operands: string = Thing
+
+
+*** Error line 6.
+  s = b.foo();
+    ^
+*** Incompatible operands: string = Thing
+
+
+*** Error line 14.
+  int foo(){}
+      ^^^
+*** Method 'foo' must match inherited type signature
+
