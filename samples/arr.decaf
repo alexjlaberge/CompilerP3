@@ -1,0 +1,20 @@
+class Heyo {
+
+}
+
+void main() {
+  int[][][][][] a;
+
+  a = NewArray(1, int[][][][]);
+  a[0] = NewArray(1, Heyo[][][]);
+  a[0][0] = NewArray(1, double[][]);
+  a[0][0][0] = NewArray(1, bool[]);
+  a[0][0][0][0] = NewArray(1, int);
+
+  a[0][0][0][0] = 1;
+
+  a[0][0][0][0][0][0][0][0] = New(Heyo);
+  a[0][0][0.0][-1][0][0][0][0] = New(Heyo);
+
+  !a[0];
+}

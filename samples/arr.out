@@ -1,0 +1,48 @@
+
+*** Error line 9.
+  a[0] = NewArray(1, Heyo[][][]);
+       ^
+*** Incompatible operands: int[][][][] = Heyo[][][][]
+
+
+*** Error line 10.
+  a[0][0] = NewArray(1, double[][]);
+          ^
+*** Incompatible operands: int[][][] = double[][][]
+
+
+*** Error line 11.
+  a[0][0][0] = NewArray(1, bool[]);
+             ^
+*** Incompatible operands: int[][] = bool[][]
+
+
+*** Error line 14.
+  a[0][0][0][0] = 1;
+                ^
+*** Incompatible operands: int[] = int
+
+
+*** Error line 16.
+  a[0][0][0][0][0][0][0][0] = New(Heyo);
+  ^^^^^^^^^^^^^^^^
+*** [] can only be applied to arrays
+
+
+*** Error line 17.
+  a[0][0][0.0][-1][0][0][0][0] = New(Heyo);
+  ^^^^^^^^^^^^^^^^^^^
+*** [] can only be applied to arrays
+
+
+*** Error line 17.
+  a[0][0][0.0][-1][0][0][0][0] = New(Heyo);
+          ^^^
+*** Array subscript must be an integer
+
+
+*** Error line 19.
+  !a[0];
+  ^
+*** Incompatible operand: ! int[][][][]
+

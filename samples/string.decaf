@@ -1,0 +1,6 @@
+void main() {
+        string c;
+        string f;
+
+        f % c + f - c;
+}

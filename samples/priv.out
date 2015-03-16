@@ -1,0 +1,6 @@
+
+*** Error line 8.
+        h.blah = 2;
+          ^^^^
+*** Heyo field 'blah' only accessible within class scope
+
