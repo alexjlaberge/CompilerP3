@@ -489,29 +489,32 @@ Type *ArrayAccess::getType() {
 }
 
 void ArrayAccess::Check() {
-        base->Check();
         subscript->Check();
-
-        const ArrayType *t = dynamic_cast<const ArrayType*>(base->getType());
-        if (t == nullptr)
-        {
-                ReportError::Formatted(base->GetLocation(),
-                                "[] can only be applied to arrays");
-                type = Type::errorType;
-                return;
-        }
 
         if (subscript->getType() != Type::intType)
         {
                 ReportError::Formatted(subscript->GetLocation(),
                                 "Array subscript must be an integer",
                                 subscript->getType()->getTypeName());
-                type = Type::errorType;
         }
-        else
+
+        base->Check();
+
+        const ArrayType *t = dynamic_cast<const ArrayType*>(base->getType());
+        if (t == nullptr)
         {
-                type = t->getBaseType();
+                if (base->getType() == Type::errorType)
+                {
+                        return;
+                }
+
+                ReportError::Formatted(base->GetLocation(),
+                                "[] can only be applied to arrays");
+                type = Type::errorType;
+                return;
         }
+
+        type = t->getBaseType();
 }
 
 void Operator::Check() {
