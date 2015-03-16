@@ -1,0 +1,21 @@
+class A {
+  int foo(Hey a) {}
+}
+
+class B {
+  int foo(int a) {}
+}
+
+interface C {
+  int foo(int a);
+}
+
+class D {
+  int foo(Hey a) {}
+}
+
+void main() {
+  Hey h;
+
+  h = New(Heyo);
+}
