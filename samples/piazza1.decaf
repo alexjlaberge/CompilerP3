@@ -1,0 +1,8 @@
+class tobereturn {}
+
+bool orderMatters()
+{
+	return whatisthis;
+}
+
+toberetur whatisthis;

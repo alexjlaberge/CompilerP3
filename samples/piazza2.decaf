@@ -1,0 +1,15 @@
+class C extends B implements E {
+    double foo() {}
+}
+
+class B extends A {
+    int foo() {}
+}
+
+interface E {
+    double foo();
+}
+
+class A implements E {
+    bool foo() {}
+}

@@ -1,0 +1,12 @@
+
+*** Error line 5.
+	return whatisthis;
+               ^^^^^^^^^^
+*** Incompatible return: toberetur given, bool expected
+
+
+*** Error line 8.
+toberetur whatisthis;
+^^^^^^^^^
+*** No declaration found for type 'toberetur'
+

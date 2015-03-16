@@ -1,0 +1,24 @@
+
+*** Error line 1.
+class C extends B implements E {
+                             ^
+*** Class 'C' does not implement entire interface 'E'
+
+
+*** Error line 2.
+    double foo() {}
+           ^^^
+*** Method 'foo' must match inherited type signature
+
+
+*** Error line 6.
+    int foo() {}
+        ^^^
+*** Method 'foo' must match inherited type signature
+
+
+*** Error line 14.
+    bool foo() {}
+         ^^^
+*** Method 'foo' must match inherited type signature
+
