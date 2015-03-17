@@ -1,0 +1,49 @@
+class pieceOfShit implements POOPOO
+{
+	int a;
+	int b()
+	{
+		this.a = 2;
+		a = 2;
+	}
+}
+
+class A extends E
+{}
+
+class B extends C
+{}
+
+class C extends D
+{}
+
+class D extends E
+{}
+
+class E extends A
+{}
+
+int main()
+{
+	A a;
+	B b;
+	C c;
+	D d;
+	E e;
+	pieceOfShit qq;
+	//this = 2;
+	a = New(B);
+	a = New(C);
+	a = New(D);
+	a = New(E);
+	a = New(A);
+	this.a = 2;
+	qq.a = 3;
+	return qq.b(qq.a,qq.b(),c);
+	qq[3][2][true][1.0] = 1;
+}
+
+interface POOPOO
+{
+	int b();
+}

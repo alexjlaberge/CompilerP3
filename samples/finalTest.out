@@ -1,0 +1,42 @@
+
+*** Error line 35.
+	this.a = 2;
+        ^^^^
+*** 'this' is only valid within class scope
+
+
+*** Error line 36.
+	qq.a = 3;
+           ^
+*** pieceOfShit field 'a' only accessible within class scope
+
+
+*** Error line 37.
+	return qq.b(qq.a,qq.b(),c);
+                  ^
+*** Function 'b' expects 0 arguments but 3 given
+
+
+*** Error line 37.
+	return qq.b(qq.a,qq.b(),c);
+                       ^
+*** pieceOfShit field 'a' only accessible within class scope
+
+
+*** Error line 38.
+	qq[3][2][true][1.0] = 1;
+        ^^
+*** [] can only be applied to arrays
+
+
+*** Error line 38.
+	qq[3][2][true][1.0] = 1;
+                 ^^^^
+*** Array subscript must be an integer
+
+
+*** Error line 38.
+	qq[3][2][true][1.0] = 1;
+                       ^^^
+*** Array subscript must be an integer
+
